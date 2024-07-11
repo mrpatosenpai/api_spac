@@ -55,9 +55,9 @@ export default class infoController {
     static async addDiaryEntry(req, res) {
         let connection;
         try {
-            const { entrada, usuario_id } = req.body;
+            const { entrada, fecha,usuario_id } = req.body;
             connection = await mysql.createConnection(db);
-            const [result] = await connection.execute("INSERT INTO diarios (entrada, usuario_id) VALUES (?, ?)", [entrada, usuario_id]);
+            const [result] = await connection.execute("INSERT INTO diarios (entrada,fecha, usuario_id) VALUES (?,?, ?)", [entrada,fecha, usuario_id]);
             console.log(result);
             res.json(result);
         } catch (error) {
@@ -72,9 +72,9 @@ export default class infoController {
     static async addScannerResult(req, res) {
         let connection;
         try {
-            const { resultado, usuario_id } = req.body;
+            const { porcentaje_fumador,fecha_escaner, usuario_id } = req.body;
             connection = await mysql.createConnection(db);
-            const [result] = await connection.execute("INSERT INTO escanerFacial (resultado, usuario_id) VALUES (?, ?)", [resultado, usuario_id]);
+            const [result] = await connection.execute("INSERT INTO escanerFacial (porcentaje_fumador,fecha_escaner, usuario_id) VALUES (?,?, ?)", [porcentaje_fumador,fecha_escaner, usuario_id]);
             console.log(result);
             res.json(result);
         } catch (error) {
@@ -89,9 +89,9 @@ export default class infoController {
     static async createPost(req, res) {
         let connection;
         try {
-            const { contenido, usuario_id } = req.body;
+            const { contenido, fecha,usuario_id } = req.body;
             connection = await mysql.createConnection(db);
-            const [result] = await connection.execute("INSERT INTO publicaciones (contenido, usuario_id) VALUES (?, ?)", [contenido, usuario_id]);
+            const [result] = await connection.execute("INSERT INTO publicaciones (contenido,fecha, usuario_id) VALUES (?, ?)", [contenido,fecha, usuario_id]);
             console.log(result);
             res.json(result);
         } catch (error) {

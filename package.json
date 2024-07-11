@@ -1,0 +1,35 @@
+{
+  "name": "myapp",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "npx nodemon --exec npx babel-node index.js",
+    "test": "test npx nodemon --exec npx mocha --require @babel/register"
+  },
+  "author": "juan",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@babel/preset-env": "^7.24.6",
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "helmet": "^7.1.0",
+    "mysql2": "^3.9.9",
+    "nodemon": "^3.1.4"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.24.7",
+    "@babel/core": "^7.24.7",
+    "@babel/node": "^7.24.7",
+    "@babel/register": "^7.24.6",
+    "@types/faker": "^6.6.9",
+    "chai": "^5.1.1",
+    "chai-http": "^4.4.0",
+    "cross-env": "^7.0.3",
+    "faker": "^6.6.6",
+    "mocha": "^10.4.0"
+  }
+}

@@ -2,6 +2,26 @@ import mysql from 'mysql2/promise';
 import db from '../config/database.js';
 
 export default class infoController {
+    static async login(req, res) {
+        let connection;
+        try {
+            const { nombre, contrasena } = req.body;
+            connection = await mysql.createConnection(db);
+            const [result] = await connection.execute("SELECT * FROM usuarios WHERE nombre = ? AND contrasena = ?", [nombre, contrasena]);
+            
+            if (result.length > 0) {
+                res.json(result[0]);
+            } else {
+                res.status(401).json({ error: 'Credenciales incorrectas' });
+            }
+        } catch (error) {
+            res.status(500).json({ 'error': error.message });
+        } finally {
+            if (connection) {
+                await connection.end();
+            }
+        }
+    }
     static async index(req, res) {
         let connection;
         try {
@@ -20,14 +40,23 @@ export default class infoController {
 
     static async store(req, res) {
         let connection;
+
         try {
             const { nombre, email, contrasena, edad } = req.body;
             connection = await mysql.createConnection(db);
+
+            // Verificar si el nombre de usuario ya existe
+            const [existingUser] = await connection.execute("SELECT * FROM usuarios WHERE nombre = ?", [nombre]);
+            if (existingUser.length > 0) {
+                return res.status(400).json({ error: "El nombre de usuario ya está registrado" });
+            }
+
+            // Insertar nuevo usuario
             const [result] = await connection.execute("INSERT INTO usuarios (nombre, email, contrasena, edad) VALUES (?, ?, ?, ?)", [nombre, email, contrasena, edad]);
             console.log(result);
-            res.json(result);
+            res.json({ message: "Usuario registrado exitosamente", insertId: result.insertId });
         } catch (error) {
-            res.status(500).json({ 'error': error.message });
+            res.status(500).json({ error: error.message });
         } finally {
             if (connection) {
                 await connection.end();

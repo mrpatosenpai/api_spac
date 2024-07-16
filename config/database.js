@@ -1,9 +1,9 @@
 const db={
-    database: 'db_spac',
-    host: 'localhost',
-    password: '',
-    port: 3306,
-    user: 'root',
+    database: 'railway',
+    host: 'viaduct.proxy.rlwy.net',
+    password: 'PoonppkmlHBhGMYbePuKKklqGOgeNjgl',
+    port: 47867,
+    user: 'postgres',
 }
 
 export default db  

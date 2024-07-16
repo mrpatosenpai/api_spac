@@ -49,12 +49,12 @@ export default class infoController {
             const [existingUser] = await connection.execute("SELECT * FROM usuarios WHERE nombre = ?", [nombre]);
             if (existingUser.length > 0) {
                 return res.status(400).json({ error: "El nombre de usuario ya está registrado" });
-            }
-
-            // Insertar nuevo usuario
+            }else{
+                        // Insertar nuevo usuario
             const [result] = await connection.execute("INSERT INTO usuarios (nombre, email, contrasena, edad) VALUES (?, ?, ?, ?)", [nombre, email, contrasena, edad]);
             console.log(result);
             res.json({ message: "Usuario registrado exitosamente", insertId: result.insertId });
+            }
         } catch (error) {
             res.status(500).json({ error: error.message });
         } finally {

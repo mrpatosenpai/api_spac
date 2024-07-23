@@ -12,7 +12,7 @@ router.post('/escanerFacial', infoController.addScannerResult);
 
 router.post('/publicaciones', infoController.createPost);
 router.get('/publicaciones', infoController.getPosts);
-router.post('/usuario/login', infoController.login)
+router.get('/usuario/login', infoController.login)
 router.get('/publicaciones/:usuario_id', infoController.getUserPosts);
 
 export default router;

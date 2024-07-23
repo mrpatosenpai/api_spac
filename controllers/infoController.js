@@ -5,7 +5,7 @@ export default class infoController {
     static async login(req, res) {
         let connection;
         try {
-            const { nombre, contrasena } = req.query;
+            const { nombre, contrasena } = req.body;
             connection = await mysql.createConnection(db);
             const [result] = await connection.execute("SELECT * FROM usuarios WHERE nombre = ? AND contrasena = ?", [nombre, contrasena]);
             

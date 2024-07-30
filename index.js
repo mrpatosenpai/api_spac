@@ -3,8 +3,9 @@ import session from 'express-session';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import routes from './config/routes.js';
+import memorystore from 'memorystore';
 
-const MemoryStore = require('memorystore')(session);
+const MemoryStore = memorystore(session);
 const app = express();
 
 // Configuración de la sesión

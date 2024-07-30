@@ -45,7 +45,7 @@ app.use('/api', routes);
 app.get('/', (req, res) => res.send('Bienvenidos a mi API :D'));
 
 const server = app.listen(process.env.PORT || 8080, () => {
-    console.log(`Servidor corriendo en puerto: ${server.address().port}`);
+    console.log(`Servidor corriendo en puerto xd: ${server.address().port}`);
 });
 
 export default app;

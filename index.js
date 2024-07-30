@@ -10,7 +10,8 @@ const app = express();
 const corsOptions = {
     origin: '*', 
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization'], 
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true, 
 };
 
 // Configuración de la sesión

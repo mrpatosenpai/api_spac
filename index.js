@@ -1,4 +1,5 @@
 import express from 'express';
+import session from 'express-session';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import routes from './config/routes.js';
@@ -11,6 +12,14 @@ const corsOptions = {
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'], 
 };
+
+// Configuración de la sesión
+app.use(session({
+    secret: 'crisvalencia456',
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: true } 
+}));
 
 // Configuración del middleware
 app.use(cors(corsOptions)); 

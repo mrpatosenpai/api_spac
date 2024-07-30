@@ -10,6 +10,7 @@ export default class infoController {
             const [result] = await connection.execute("SELECT * FROM usuarios WHERE nombre = ? AND contrasena = ?", [nombre, contrasena]);
             
             if (result.length > 0) {
+                req.session.userId = result[0].id;  // Guardar la id del usuario en la sesión
                 res.json(result[0]);
             } else {
                 res.status(401).json({ error: 'Credenciales incorrectas' });
@@ -158,6 +159,33 @@ export default class infoController {
             res.json(result);
         } catch (error) {
             res.status(500).json({ 'error': error.message });
+        } finally {
+            if (connection) {
+                await connection.end();
+            }
+        }
+    }
+    static async nuevaEntrada(req, res) {
+        let connection;
+
+        try {
+            const usuarioId = req.session.userId; 
+
+            if (!usuarioId) {
+                return res.status(401).json({ error: 'Usuario no autenticado' });
+            }
+
+            const { entrada } = req.body;
+            connection = await mysql.createConnection(db);
+
+            const [result] = await connection.execute(
+                'INSERT INTO entradas_diario (usuario_id, entrada, fecha_hora) VALUES (?, ?, NOW())',
+                [usuarioId, entrada]
+            );
+
+            res.json({ message: 'Entrada añadida exitosamente', id: result.insertId });
+        } catch (error) {
+            res.status(500).json({ error: error.message });
         } finally {
             if (connection) {
                 await connection.end();

@@ -14,5 +14,6 @@ router.post('/publicaciones', infoController.createPost);
 router.get('/publicaciones', infoController.getPosts);
 router.post('/usuarios/login', infoController.login)
 router.get('/publicaciones/:usuario_id', infoController.getUserPosts);
+router.get('/usuarios/nuevaEntrada', infoController.nuevaEntrada);
 
 export default router;

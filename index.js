@@ -1,35 +1,39 @@
 import express from 'express';
 import session from 'express-session';
-import MySQLStore from 'express-mysql-session';
+import MySQLStore from 'express-mysql-session'; // Importa MySQLStore correctamente
 import bodyParser from 'body-parser';
-import mysql from 'mysql2/promise';
 import cors from 'cors';
-import routes from './config/routes.js';
+import mysql from 'mysql2/promise'; // Importa mysql2
 import db from './config/database.js';
+import routes from './config/routes.js';
 
 const app = express();
 
+// Configuración de CORS
+const corsOptions = {
+    origin: 'https://yourfrontenddomain.com', // Cambia esto por tu dominio de frontend
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true // Habilita el soporte de cookies
+};
+
+// Configuración de la sesión
+const sessionStore = new MySQLStore({
+    expiration: 86400000, // Tiempo de expiración en milisegundos (1 día)
+    createDatabaseTable: true,
+}, mysql.createPool(db));
+
 app.use(session({
     secret: 'crisvalencia456',
+    store: sessionStore,
     resave: false,
     saveUninitialized: false,
     cookie: {
-        secure: process.env.NODE_ENV === 'production', // Usa 'true' si estás en producción y tu app usa HTTPS
+        secure: process.env.NODE_ENV === 'production', // 'true' en producción (HTTPS) y 'false' en desarrollo (HTTP)
         httpOnly: true,
-        sameSite: 'lax' // Cambia según sea necesario
-    },
-    store: new MySQLStore({
-        expiration: 86400000, // Tiempo de expiración en milisegundos (1 día)
-        createDatabaseTable: true,
-    }, mysql.createPool(db))
-}))
-
-const corsOptions = {
-    origin: '*', // Cambia esto por tu dominio o usa '*' para desarrollo
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-    credentials: true, // Habilita el soporte de cookies
-};
+        sameSite: 'lax' // Ajusta esto según sea necesario
+    }
+}));
 
 // Configuración del middleware
 app.use(cors(corsOptions)); 
@@ -40,7 +44,7 @@ app.use('/api', routes);
 
 app.get('/', (req, res) => res.send('Bienvenidos a mi API :D'));
 
-const server = app.listen(process.env.PORT || 8000, () => {
+const server = app.listen(process.env.PORT || 8080, () => {
     console.log(`Servidor corriendo en puerto: ${server.address().port}`);
 });
 

@@ -1,27 +1,15 @@
 import express from 'express';
 import session from 'express-session';
-import MySQLStore from 'express-mysql-session'; // Importa MySQLStore correctamente
-import bodyParser from 'body-parser';
+import MySQLStore from 'express-mysql-session'; // Asegúrate de que esto esté importado correctamente
+import mysql from 'mysql2/promise';
+import db from './config/database.js'; // Ajusta la ruta a tu archivo de configuración
 import cors from 'cors';
-import mysql from 'mysql2/promise'; // Importa mysql2
-import db from './config/database.js';
-import routes from './config/routes.js';
+import bodyParser from 'body-parser';
 
 const app = express();
 
-// Configuración de CORS
-const corsOptions = {
-    origin: '*', // Cambia esto por tu dominio de frontend
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-    credentials: true // Habilita el soporte de cookies
-};
-
-// Configuración de la sesión
-const sessionStore = new MySQLStore({
-    expiration: 86400000, // Tiempo de expiración en milisegundos (1 día)
-    createDatabaseTable: true,
-}, mysql.createPool(db));
+// Configuración del almacenamiento de sesiones
+const sessionStore = new MySQLStore({}, mysql.createPool(db));
 
 app.use(session({
     secret: 'crisvalencia456',
@@ -29,14 +17,21 @@ app.use(session({
     resave: false,
     saveUninitialized: false,
     cookie: {
-        secure: process.env.NODE_ENV === 'production', // 'true' en producción (HTTPS) y 'false' en desarrollo (HTTP)
+        secure: process.env.NODE_ENV === 'production',
         httpOnly: true,
-        sameSite: 'lax' // Ajusta esto según sea necesario
+        sameSite: 'lax'
     }
 }));
 
-// Configuración del middleware
-app.use(cors(corsOptions)); 
+// Configuración de CORS
+const corsOptions = {
+    origin: '*', // Cambia esto según tu configuración
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true
+};
+
+app.use(cors(corsOptions));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 

@@ -1,17 +1,12 @@
 import express from 'express';
 import session from 'express-session';
-import MySQLStore from 'express-mysql-session';
+import FileStore from 'session-file-store';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import routes from './config/routes.js';
 
 const app = express();
-
-const sessionStore = new MySQLStore({
-    expiration: 86400000, 
-    createDatabaseTable: true,
-}, mysql.createPool(db));
-
+const FileStoreInstance = FileStore(session);
 // Configuración de CORS
 const corsOptions = {
     origin: '*', 
@@ -22,8 +17,8 @@ const corsOptions = {
 
 // Configuración de la sesión
 app.use(session({
+    store: new FileStoreInstance(),
     secret: 'crisvalencia456',
-    store: sessionStore,
     resave: false,
     saveUninitialized: true,
     cookie: { secure: true } 

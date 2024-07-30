@@ -5,6 +5,7 @@ import bodyParser from 'body-parser';
 import mysql from 'mysql2/promise';
 import cors from 'cors';
 import routes from './config/routes.js';
+import db from './config/database.js';
 
 const app = express();
 

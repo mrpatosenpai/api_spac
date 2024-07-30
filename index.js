@@ -1,10 +1,19 @@
 import express from 'express';
-import session from 'express-session';
+const session = require('express-session')
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import routes from './config/routes.js';
 
 const app = express();
+
+app.use(session({
+    cookie: { maxAge: 86400000 },
+    store: new MemoryStore({
+      checkPeriod: 86400000 
+    }),
+    resave: false,
+    secret: 'crisvalencia456'
+}))
 
 const corsOptions = {
     origin: '*', 
@@ -12,12 +21,7 @@ const corsOptions = {
     allowedHeaders: ['Content-Type', 'Authorization'], 
 };
 
-app.use(session({
-    secret: 'crisvalencia456',
-    resave: false,
-    saveUninitialized: true,
-    cookie: { secure: true } 
-}));
+
 
 app.use(cors(corsOptions)); 
 app.use(bodyParser.urlencoded({ extended: false }));

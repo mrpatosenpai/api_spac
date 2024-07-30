@@ -1,26 +1,16 @@
 import express from 'express';
 import session from 'express-session';
-import MySQLStore from 'express-mysql-session'; // Asegúrate de que esto esté importado correctamente
-import mysql from 'mysql2/promise';
-import db from './config/database.js'; // Ajusta la ruta a tu archivo de configuración
 import cors from 'cors';
 import bodyParser from 'body-parser';
 
 const app = express();
 
-// Configuración del almacenamiento de sesiones
-const sessionStore = new MySQLStore({}, mysql.createPool(db));
 
 app.use(session({
     secret: 'crisvalencia456',
-    store: sessionStore,
     resave: false,
-    saveUninitialized: false,
-    cookie: {
-        secure: process.env.NODE_ENV === 'production',
-        httpOnly: true,
-        sameSite: 'lax'
-    }
+    saveUninitialized: true,
+    cookie: { secure: true }
 }));
 
 // Configuración de CORS

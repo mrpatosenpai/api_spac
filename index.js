@@ -1,27 +1,32 @@
 import express from 'express';
-const session = require('express-session')
+import session from 'express-session';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import routes from './config/routes.js';
 
+const MemoryStore = require('memorystore')(session);
 const app = express();
 
+// Configuración de la sesión
 app.use(session({
-    cookie: { maxAge: 86400000 },
     store: new MemoryStore({
-      checkPeriod: 86400000 
+        checkPeriod: 86400000 // Revisar periódicamente para limpiar sesiones expiradas
     }),
+    secret: 'crisvalencia456',
     resave: false,
-    secret: 'crisvalencia456'
-}))
+    saveUninitialized: true,
+    cookie: {
+        maxAge: 86400000, // 24 horas
+        secure: false // Cambia a true si estás utilizando HTTPS
+    }
+}));
 
+// Configuración de CORS
 const corsOptions = {
     origin: '*', 
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'], 
 };
-
-
 
 app.use(cors(corsOptions)); 
 app.use(bodyParser.urlencoded({ extended: false }));

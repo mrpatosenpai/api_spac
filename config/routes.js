@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import infoController from '../controllers/infoController.js';
+import sessionMiddleware from 'express-session';
 
 const router = Router();
 
@@ -14,6 +15,6 @@ router.post('/publicaciones', infoController.createPost);
 router.get('/publicaciones', infoController.getPosts);
 router.post('/usuarios/login', infoController.login)
 router.get('/publicaciones/:usuario_id', infoController.getUserPosts);
-router.post('/usuarios/nuevaEntrada', infoController.nuevaEntrada);
+router.post('/usuarios/nuevaEntrada', sessionMiddleware, infoController.nuevaEntrada);
 
 export default router;

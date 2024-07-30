@@ -3,15 +3,8 @@ import session from 'express-session';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import routes from './config/routes.js';
-import mysql from 'mysql2/promise';
-import MySQLStore from 'express-mysql-session';
-import db from './config/database.js';
 
 const app = express();
-
-
-const connection = await mysql.createConnection(db);
-const sessionStore = new MySQLStore({}, connection);
 
 const corsOptions = {
     origin: '*', 
@@ -20,11 +13,10 @@ const corsOptions = {
 };
 
 app.use(session({
-    store: sessionStore,
     secret: 'crisvalencia456',
     resave: false,
-    saveUninitialized: false,
-    cookie: { secure: true },
+    saveUninitialized: true,
+    cookie: { secure: true } 
 }));
 
 app.use(cors(corsOptions)); 

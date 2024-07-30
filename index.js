@@ -11,7 +11,7 @@ const app = express();
 
 // Configuración de CORS
 const corsOptions = {
-    origin: 'https://yourfrontenddomain.com', // Cambia esto por tu dominio de frontend
+    origin: '*', // Cambia esto por tu dominio de frontend
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true // Habilita el soporte de cookies
@@ -45,7 +45,7 @@ app.use('/api', routes);
 app.get('/', (req, res) => res.send('Bienvenidos a mi API :D'));
 
 const server = app.listen(process.env.PORT || 8080, () => {
-    console.log(`Servidor corriendo en puerto xd: ${server.address().port}`);
+    console.log(`Servidor corriendo en puerto: ${server.address().port}`);
 });
 
 export default app;

@@ -3,12 +3,11 @@
   "version": "1.0.0",
   "main": "index.js",
   "type": "module",
- "scripts": {
-  "start": "NODE_ENV=production node index.js",
-  "start:dev": "NODE_ENV=development npx nodemon --exec npx babel-node index.js",
-  "test": "NODE_ENV=test npx nodemon --exec npx mocha --require @babel/register",
-  "postinstall": "npm install --omit=dev"
-},
+  "scripts": {
+    "start": "NODE_ENV=production node index.js",
+    "start:dev": "NODE_ENV=development npx nodemon --exec npx babel-node index.js",
+    "test": "NODE_ENV=test npx nodemon --exec npx mocha --require @babel/register"
+  },
   "author": "juan",
   "license": "ISC",
   "description": "",

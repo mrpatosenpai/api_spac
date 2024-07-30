@@ -2,6 +2,7 @@ import express from 'express';
 import session from 'express-session';
 import MySQLStore from 'express-mysql-session';
 import bodyParser from 'body-parser';
+import mysql from 'mysql2/promise';
 import cors from 'cors';
 import routes from './config/routes.js';
 

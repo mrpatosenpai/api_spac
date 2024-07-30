@@ -1,6 +1,7 @@
 import mysql from 'mysql2/promise';
 import db from '../config/database.js';
 
+
 export default class infoController {
     static async login(req, res) {
         let connection;
@@ -8,11 +9,11 @@ export default class infoController {
             const { nombre, contrasena } = req.body;
             connection = await mysql.createConnection(db);
             const [result] = await connection.execute("SELECT * FROM usuarios WHERE nombre = ? AND contrasena = ?", [nombre, contrasena]);
-            
+    
             if (result.length > 0) {
                 req.session.userId = result[0].id; 
+                console.log('Session UserID after login:', req.session.userId); // Verifica si se guarda correctamente
                 res.json(result[0]);
-                console.log('Login result:', result[0]);
             } else {
                 res.status(401).json({ error: 'Credenciales incorrectas' });
             }

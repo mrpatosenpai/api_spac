@@ -1,10 +1,16 @@
 import express from 'express';
 import session from 'express-session';
+import MySQLStore from 'express-mysql-session';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import routes from './config/routes.js';
 
 const app = express();
+
+const sessionStore = new MySQLStore({
+    expiration: 86400000, 
+    createDatabaseTable: true,
+}, mysql.createPool(db));
 
 // Configuración de CORS
 const corsOptions = {
@@ -17,6 +23,7 @@ const corsOptions = {
 // Configuración de la sesión
 app.use(session({
     secret: 'crisvalencia456',
+    store: sessionStore,
     resave: false,
     saveUninitialized: true,
     cookie: { secure: true } 

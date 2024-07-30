@@ -179,7 +179,7 @@ export default class infoController {
             connection = await mysql.createConnection(db);
 
             const [result] = await connection.execute(
-                'INSERT INTO diarios (usuario_id, entrada, fecha) VALUES (?, ?, NOW())',
+                'INSERT INTO diarios (usuario_id, entrada, fecha_hora) VALUES (?, ?, NOW())',
                 [usuarioId, entrada]
             );
 

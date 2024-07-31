@@ -184,7 +184,7 @@ export default class infoController {
         try {
             connection = await mysql.createConnection(db);
             const [result] = await connection.execute(
-                'SELECT * diarios WHERE usuario_id = ?', [usuarioId]
+                'SELECT * FROM diarios WHERE usuario_id = ?', [usuarioId]
             );
             console.log(result)
             res.json(result)

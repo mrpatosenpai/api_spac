@@ -176,7 +176,10 @@ export default class infoController {
     };
     static async MisEntradas(req, res) {
         const usuarioId = req.session.userId;
-        
+    
+        if (!usuarioId) {
+            return res.status(401).json({ error: 'Usuario no autenticado' });
+        }
         let connection;
         try {
             connection = await mysql.createConnection(db);

@@ -84,23 +84,6 @@ export default class infoController {
         }
     }
 
-    static async addDiaryEntry(req, res) {
-        let connection;
-        try {
-            const { entrada, fecha,usuario_id } = req.body;
-            connection = await mysql.createConnection(db);
-            const [result] = await connection.execute("INSERT INTO diarios (entrada,fecha, usuario_id) VALUES (?,?, ?)", [entrada,fecha, usuario_id]);
-            console.log(result);
-            res.json(result);
-        } catch (error) {
-            res.status(500).json({ 'error': error.message });
-        } finally {
-            if (connection) {
-                await connection.end();
-            }
-        }
-    }
-
     static async addScannerResult(req, res) {
         let connection;
         try {
@@ -183,6 +166,25 @@ export default class infoController {
                 [usuarioId, entrada]
             );
             res.json({ message: 'Entrada añadida exitosamente', id: result.insertId });
+        } catch (error) {
+            res.status(500).json({ error: error.message });
+        } finally {
+            if (connection) {
+                await connection.end();
+            }
+        }
+    };
+    static async MisEntradas(req, res) {
+        const usuarioId = req.session.userId;
+        
+        let connection;
+        try {
+            connection = await mysql.createConnection(db);
+            const [result] = await connection.execute(
+                'SELECT * diarios WHERE usuario_id = ?', [usuarioId]
+            );
+            console.log(result)
+            res.json(result)
         } catch (error) {
             res.status(500).json({ error: error.message });
         } finally {

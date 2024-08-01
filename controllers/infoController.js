@@ -180,6 +180,7 @@ export default class infoController {
         if (!usuarioId) {
             return res.status(401).json({ error: 'Usuario no autenticado' });
         }
+        console.log('Usuario ID en MisEntradas:', usuarioId); // Agrega esta línea
         let connection;
         try {
             connection = await mysql.createConnection(db);

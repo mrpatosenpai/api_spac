@@ -157,10 +157,7 @@ export default class infoController {
     static async misentradas(req, res) {
         console.log('Entrando en MisEntradas...');
         const usuarioNombre = req.session.userName; // Obtiene el nombre de usuario desde la sesión
-        console.log('Session UserName in entradas:', req.session.userName);
-    
-        console.log('Contenido de req.session:', req.session);
-        console.log('Usuario Nombre en MisEntradas:', usuarioNombre);
+        console.log('Session UserName in entradas:', usuarioNombre);
     
         if (!usuarioNombre) {
             console.log('Usuario no autenticado');
@@ -173,11 +170,13 @@ export default class infoController {
             connection = await mysql.createConnection(db);
             console.log('Conexión a la base de datos establecida.');
     
-            // Busca el ID del usuario a través del nombre de usuario
             console.log('Ejecutando consulta para obtener el ID del usuario...');
+            // Busca el ID del usuario a través del nombre de usuario
             const [userResult] = await connection.execute(
                 'SELECT id FROM usuarios WHERE nombre = ?', [usuarioNombre]
             );
+    
+            console.log('Resultado de consulta para obtener ID del usuario:', userResult);
     
             if (userResult.length === 0) {
                 console.log('No se encontró el usuario.');
@@ -185,6 +184,7 @@ export default class infoController {
             }
     
             const usuarioId = userResult[0].id;
+            console.log('ID del usuario obtenido:', usuarioId);
     
             console.log('Ejecutando consulta de entradas...');
             // Busca las entradas usando el ID del usuario
@@ -192,7 +192,7 @@ export default class infoController {
                 'SELECT * FROM diarios WHERE usuario_id = ?', [usuarioId]
             );
     
-            console.log('Resultado de la consulta:', result);
+            console.log('Resultado de la consulta de entradas:', result);
     
             if (result.length === 0) {
                 console.log('No se encontraron entradas para el usuario.');
@@ -210,7 +210,7 @@ export default class infoController {
                 console.log('Conexión a la base de datos cerrada.');
             }
         }
-    };
+    }
 
     static async nuevaEntrada(req, res) {
         console.log('Entrando en nuevaEntrada...');

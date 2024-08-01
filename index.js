@@ -8,13 +8,11 @@ import memorystore from 'memorystore';
 const MemoryStore = memorystore(session);
 const app = express();
 
-// Middleware para redirigir HTTP a HTTPS
+// Redirección de HTTP a HTTPS
 app.use((req, res, next) => {
     if (req.secure) {
-        // La solicitud ya está en HTTPS, sigue con el siguiente middleware
         return next();
     }
-    // Redirige a HTTPS
     res.redirect('https://' + req.headers.host + req.url);
 });
 
@@ -28,7 +26,7 @@ app.use(session({
     saveUninitialized: true,
     cookie: {
         maxAge: 86400000, // 24 horas
-        secure: true, // Cambia a true si HTTPS está habilitado
+        secure: true, // Debe ser true para HTTPS
         httpOnly: true,
         sameSite: 'None',
     }
@@ -60,15 +58,9 @@ app.get('/api/usuarios/test', (req, res) => {
     res.json(req.session);
 });
 
-app.use((err, req, res, next) => {
-    console.error('Error:', err.message);
-    res.status(500).json({ error: err.message });
-});
-
 // Ruta principal
 app.get('/', (req, res) => res.send('Bienvenidos a mi API :D'));
 
-// Crear el servidor HTTP
 const server = app.listen(process.env.PORT || 8000, () => {
     console.log(`Servidor corriendo en puerto: ${server.address().port}`);
 });

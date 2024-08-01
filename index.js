@@ -28,9 +28,9 @@ app.use(session({
     saveUninitialized: true,
     cookie: {
         maxAge: 86400000, // 24 horas
-        secure: false, // Cambia a true si HTTPS está habilitado
+        secure: true, // Cambia a true si HTTPS está habilitado
         httpOnly: true,
-        sameSite: 'Lax',
+        sameSite: 'None',
     }
 }));
 

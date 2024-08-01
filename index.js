@@ -24,9 +24,10 @@ app.use(session({
 
 // Configuración de CORS
 const corsOptions = {
-    origin: '*', 
+    origin: '*', // Reemplaza con el origen de tu cliente
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization'], 
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true, // Permite el envío de cookies
 };
 
 app.use(cors(corsOptions)); 

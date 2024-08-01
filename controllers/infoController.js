@@ -150,7 +150,7 @@ export default class infoController {
             }
         }
     }
-    static async MisEntradas(req, res) {
+    static async misentradas(req, res) {
         console.log('Entrando en MisEntradas...');
     
         // Verifica el contenido de req.session

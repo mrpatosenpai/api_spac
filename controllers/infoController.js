@@ -3,7 +3,7 @@ import db from '../config/database.js';
 
 
 export default class infoController {
-    static async login(req, res) {
+    /* static async login(req, res) {
         let connection;
         try {
             const { nombre, contrasena } = req.body;
@@ -27,7 +27,7 @@ export default class infoController {
                 await connection.end();
             }
         }
-    }
+    } */
     static async index(req, res) {
         let connection;
         try {

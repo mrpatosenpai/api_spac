@@ -165,6 +165,17 @@ export default class infoController {
             return res.status(401).json({ error: 'Usuario no autenticado' });
         }
     
+        // Datos estáticos para prueba
+        const datosDePrueba = [
+            { id: 1, content: 'Entrada de prueba' },
+            { id: 2, content: 'Otra entrada de prueba' }
+        ];
+    
+        // Enviar respuesta con datos estáticos
+        console.log('Enviando respuesta con entradas...');
+        res.json(datosDePrueba);
+    
+        /*
         let connection;
         try {
             console.log('Intentando conectar a la base de datos...');
@@ -194,8 +205,8 @@ export default class infoController {
                 console.log('Conexión a la base de datos cerrada.');
             }
         }
+        */
     }
-
     static async nuevaEntrada(req, res) {
         console.log('Entrando en nuevaEntrada...');
         
@@ -237,3 +248,5 @@ export default class infoController {
     }
     
 }
+
+

@@ -11,8 +11,11 @@ export default class infoController {
             const [result] = await connection.execute("SELECT * FROM usuarios WHERE nombre = ? AND contrasena = ?", [nombre, contrasena]);
     
             if (result.length > 0) {
-                req.session.userId = result[0].id; 
+                // Guarda el ID y el nombre de usuario en la sesión
+                req.session.userId = result[0].id;
+                req.session.userName = result[0].nombre;  // Guarda el nombre de usuario
                 console.log('Session UserID after login:', req.session.userId); // Verifica si se guarda correctamente
+                console.log('Session UserName after login:', req.session.userName); // Verifica si se guarda correctamente
                 res.json(result[0]);
             } else {
                 res.status(401).json({ error: 'Credenciales incorrectas' });
@@ -25,7 +28,6 @@ export default class infoController {
             }
         }
     }
-
     static async index(req, res) {
         let connection;
         try {
@@ -40,7 +42,7 @@ export default class infoController {
                 await connection.end();
             }
         }
-    }
+    };
 
     static async store(req, res) {
         let connection;
@@ -66,7 +68,7 @@ export default class infoController {
                 await connection.end();
             }
         }
-    }
+    };
 
     static async details(req, res) {
         let connection;
@@ -83,7 +85,7 @@ export default class infoController {
                 await connection.end();
             }
         }
-    }
+    };
 
     static async addScannerResult(req, res) {
         let connection;
@@ -100,7 +102,7 @@ export default class infoController {
                 await connection.end();
             }
         }
-    }
+    };
 
     static async createPost(req, res) {
         let connection;
@@ -117,7 +119,7 @@ export default class infoController {
                 await connection.end();
             }
         }
-    }
+    };
 
     static async getPosts(req, res) {
         let connection;
@@ -133,7 +135,7 @@ export default class infoController {
                 await connection.end();
             }
         }
-    }
+    };
 
     static async getUserPosts(req, res) {
         let connection;
@@ -150,17 +152,17 @@ export default class infoController {
                 await connection.end();
             }
         }
-    }
+    };
 
     static async misentradas(req, res) {
         console.log('Entrando en MisEntradas...');
-        const usuarioId = req.session.userId;
-        console.log('Session in entradas:', req.session.userId);
+        const usuarioNombre = req.session.userName; // Obtiene el nombre de usuario desde la sesión
+        console.log('Session UserName in entradas:', req.session.userName);
     
         console.log('Contenido de req.session:', req.session);
-        console.log('Usuario ID en MisEntradas:', usuarioId);
+        console.log('Usuario Nombre en MisEntradas:', usuarioNombre);
     
-        if (!usuarioId) {
+        if (!usuarioNombre) {
             console.log('Usuario no autenticado');
             return res.status(401).json({ error: 'Usuario no autenticado' });
         }
@@ -171,7 +173,21 @@ export default class infoController {
             connection = await mysql.createConnection(db);
             console.log('Conexión a la base de datos establecida.');
     
-            console.log('Ejecutando consulta...');
+            // Busca el ID del usuario a través del nombre de usuario
+            console.log('Ejecutando consulta para obtener el ID del usuario...');
+            const [userResult] = await connection.execute(
+                'SELECT id FROM usuarios WHERE nombre = ?', [usuarioNombre]
+            );
+    
+            if (userResult.length === 0) {
+                console.log('No se encontró el usuario.');
+                return res.status(404).json({ message: 'Usuario no encontrado' });
+            }
+    
+            const usuarioId = userResult[0].id;
+    
+            console.log('Ejecutando consulta de entradas...');
+            // Busca las entradas usando el ID del usuario
             const [result] = await connection.execute(
                 'SELECT * FROM diarios WHERE usuario_id = ?', [usuarioId]
             );
@@ -194,7 +210,7 @@ export default class infoController {
                 console.log('Conexión a la base de datos cerrada.');
             }
         }
-    }
+    };
 
     static async nuevaEntrada(req, res) {
         console.log('Entrando en nuevaEntrada...');
@@ -234,8 +250,8 @@ export default class infoController {
                 console.log('Conexión a la base de datos cerrada.');
             }
         }
-    }
+    };
     
-}
+};
 
 

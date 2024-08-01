@@ -172,7 +172,7 @@ export default class infoController {
     
             console.log('Ejecutando consulta...');
             const [result] = await connection.execute(
-                'SELECT * FROM diarios WHERE usuario_id = ?', [usuarioId]
+                'SELECT * FROM diarios', [usuarioId]
             );
     
             console.log('Resultado de la consulta:', result);

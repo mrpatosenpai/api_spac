@@ -20,6 +20,7 @@ app.use(session({
         maxAge: 86400000, // 24 horas
         secure: false, // Cambia a true si estás utilizando HTTPS
         httpOnly: true,
+        sameSite: 'None' // Asegúrate de que las cookies se envíen en solicitudes de terceros
     }
 }));
 app.use((req, res, next) => {
@@ -30,7 +31,8 @@ app.use((req, res, next) => {
 const corsOptions = {
     origin: 'http://apispac-production.up.railway.app/', // Reemplaza con el origen de tu cliente
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization']
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true
 };
 
 app.use(cors(corsOptions)); 

@@ -186,8 +186,8 @@ export default class infoController {
             const [result] = await connection.execute(
                 'SELECT * FROM diarios WHERE usuario_id = ?', [usuarioId]
             );
-            console.log(result)
-            res.json(result)
+            console.log(result);
+            res.json(result);
         } catch (error) {
             res.status(500).json({ error: error.message });
         } finally {
@@ -195,5 +195,5 @@ export default class infoController {
                 await connection.end();
             }
         }
-    };
+    }
 }

@@ -181,13 +181,23 @@ export default class infoController {
         if (!usuarioId) {
             return res.status(401).json({ error: 'Usuario no autenticado' });
         }
+    
         let connection;
         try {
             connection = await mysql.createConnection(db);
+            console.log('Conexión a la base de datos establecida.');
+    
             const [result] = await connection.execute(
                 'SELECT * FROM diarios WHERE usuario_id = ?', [usuarioId]
             );
+    
             console.log('Resultado de la consulta:', result); // Verifica el resultado
+    
+            if (result.length === 0) {
+                console.log('No se encontraron entradas para el usuario.');
+                return res.status(404).json({ message: 'No se encontraron entradas' });
+            }
+    
             res.json(result);
         } catch (error) {
             console.error('Error al recuperar entradas:', error); // Más detalles del error
@@ -195,7 +205,8 @@ export default class infoController {
         } finally {
             if (connection) {
                 await connection.end();
+                console.log('Conexión a la base de datos cerrada.');
             }
         }
-    };
+    }
 }

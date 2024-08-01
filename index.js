@@ -29,6 +29,7 @@ app.use((req, res, next) => {
     next();
 });
 
+
 // Configuración de CORS
 const corsOptions = {
     origin: 'https://apispac-production.up.railway.app', // Asegúrate de que coincida con el origen de tu cliente
@@ -50,6 +51,10 @@ app.get('/api/usuarios/test', (req, res) => {
     res.json(req.session);
 });
 
+app.use((err, req, res, next) => {
+    console.error('Error:', err.message);
+    res.status(500).json({ error: err.message });
+});
 // Ruta principal
 app.get('/', (req, res) => res.send('Bienvenidos a mi API :D'));
 

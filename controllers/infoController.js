@@ -175,15 +175,18 @@ export default class infoController {
         }
     };
     static async MisEntradas(req, res) {
+        console.log('Entrando en MisEntradas...'); // Verifica si la función se está llamando
         const usuarioId = req.session.userId;
         console.log('Usuario ID en MisEntradas:', usuarioId); // Verifica el usuarioId
     
         if (!usuarioId) {
+            console.log('Usuario no autenticado');
             return res.status(401).json({ error: 'Usuario no autenticado' });
         }
     
         let connection;
         try {
+            console.log('Intentando conectar a la base de datos...');
             connection = await mysql.createConnection(db);
             console.log('Conexión a la base de datos establecida.');
     

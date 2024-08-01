@@ -122,14 +122,34 @@ export default class infoController {
     static async getPosts(req, res) {
         let connection;
         try {
+            // Obtener el usuario_id desde la sesión
+            const usuarioId = req.session.userId;
+    
+            if (!usuarioId) {
+                // Verificar si el usuario está autenticado
+                return res.status(401).json({ error: 'Usuario no autenticado' });
+            }
+    
+            console.log('Usuario ID en getPosts:', usuarioId);
+    
+            // Conectar a la base de datos
             connection = await mysql.createConnection(db);
-            const [result] = await connection.execute("SELECT * FROM publicaciones");
-            console.log(result);
+    
+            // Ejecutar la consulta
+            const [result] = await connection.execute(
+                'SELECT * FROM publicaciones WHERE usuario_id = ?', [usuarioId]
+            );
+    
+            console.log('Resultado de la consulta:', result);
+    
+            // Devolver los resultados
             res.json(result);
         } catch (error) {
-            res.status(500).json({ 'error': error.message });
+            console.error('Error al recuperar publicaciones:', error);
+            res.status(500).json({ error: error.message });
         } finally {
             if (connection) {
+                // Cerrar la conexión a la base de datos
                 await connection.end();
             }
         }
@@ -155,6 +175,7 @@ export default class infoController {
     static async misentradas(req, res) {
         console.log('Entrando en MisEntradas...');
         const usuarioId = req.session.userId;
+        console.log('Session in entradas:', req.session.userId);
     
         console.log('Contenido de req.session:', req.session);
         console.log('Usuario ID en MisEntradas:', usuarioId);
@@ -172,7 +193,7 @@ export default class infoController {
     
             console.log('Ejecutando consulta...');
             const [result] = await connection.execute(
-                'SELECT * FROM diarios', [usuarioId]
+                'SELECT * FROM diarios WHERE usuario_id = ?', [usuarioId]
             );
     
             console.log('Resultado de la consulta:', result);
@@ -234,4 +255,5 @@ export default class infoController {
             }
         }
     }
+    
 }

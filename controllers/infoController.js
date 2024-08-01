@@ -122,34 +122,14 @@ export default class infoController {
     static async getPosts(req, res) {
         let connection;
         try {
-            // Obtener el usuario_id desde la sesión
-            const usuarioId = req.session.userId;
-    
-            if (!usuarioId) {
-                // Verificar si el usuario está autenticado
-                return res.status(401).json({ error: 'Usuario no autenticado' });
-            }
-    
-            console.log('Usuario ID en getPosts:', usuarioId);
-    
-            // Conectar a la base de datos
             connection = await mysql.createConnection(db);
-    
-            // Ejecutar la consulta
-            const [result] = await connection.execute(
-                'SELECT * FROM publicaciones WHERE usuario_id = ?', [usuarioId]
-            );
-    
-            console.log('Resultado de la consulta:', result);
-    
-            // Devolver los resultados
+            const [result] = await connection.execute("SELECT * FROM publicaciones");
+            console.log(result);
             res.json(result);
         } catch (error) {
-            console.error('Error al recuperar publicaciones:', error);
-            res.status(500).json({ error: error.message });
+            res.status(500).json({ 'error': error.message });
         } finally {
             if (connection) {
-                // Cerrar la conexión a la base de datos
                 await connection.end();
             }
         }

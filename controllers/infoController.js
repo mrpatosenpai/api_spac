@@ -198,6 +198,7 @@ export default class infoController {
         console.log('Entrando en nuevaEntrada...');
         
         const usuarioId = req.session.userId;
+        console.log('Session ID en el middleware:', req.sessionID);
         console.log('Usuario ID en nuevaEntrada:', usuarioId);
     
         if (!usuarioId) {

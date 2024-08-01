@@ -170,7 +170,7 @@ export default class infoController {
             connection = await mysql.createConnection(db);
             console.log('Conexión a la base de datos establecida.');
     
-            console.log('Ejecutando consulta para obtener el ID del usuario...');
+            console.log('Ejecutando consulta para obtener el ID del usuariooo...');
             // Busca el ID del usuario a través del nombre de usuario
             const [userResult] = await connection.execute(
                 'SELECT id FROM usuarios WHERE nombre = ?', [usuarioNombre]

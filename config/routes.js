@@ -11,9 +11,9 @@ router.post('/escanerFacial', infoController.addScannerResult);
 
 router.post('/crear/publicaciones', infoController.createPost);
 router.get('/tomar/publicaciones', infoController.getPosts);
-router.post('/usuarios/login', infoController.login)
+router.post('/usuarios/login', infoController.login);
 router.get('/publicaciones/:usuario_id', infoController.getUserPosts);
 router.post('/usuarios/nuevaEntrada', infoController.nuevaEntrada);
-router.get('/usuarios/entradas',infoController.misentradas)
+router.get('/usuarios/entradas',infoController.misentradas);
 
 export default router;

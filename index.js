@@ -41,6 +41,11 @@ app.use(bodyParser.json());
 
 app.use('/api', routes);
 
+app.get('/api/usuarios/test', (req, res) => {
+    console.log('Session on test route:', req.session);
+    res.json(req.session);
+});
+
 app.get('/', (req, res) => res.send('Bienvenidos a mi API :D'));
 
 const server = app.listen(process.env.PORT || 8000, () => {

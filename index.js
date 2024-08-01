@@ -28,7 +28,7 @@ app.use((req, res, next) => {
 });
 // Configuración de CORS
 const corsOptions = {
-    origin: '*', // Reemplaza con el origen de tu cliente
+    origin: 'https://apispac-production.up.railway.app/', // Reemplaza con el origen de tu cliente
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization']
 };

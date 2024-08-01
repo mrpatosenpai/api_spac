@@ -21,7 +21,7 @@ app.use(session({
         maxAge: 86400000, // 24 horas
         secure: false, // Debe ser true para HTTPS
         httpOnly: true,
-        sameSite: 'Lax',
+        sameSite: 'None',
     }
 }));
 

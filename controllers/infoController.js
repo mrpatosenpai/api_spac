@@ -195,28 +195,41 @@ export default class infoController {
         }
     }
     static async nuevaEntrada(req, res) {
+        console.log('Entrando en nuevaEntrada...');
+        
         const usuarioId = req.session.userId;
+        console.log('Usuario ID en nuevaEntrada:', usuarioId);
     
         if (!usuarioId) {
+            console.log('Usuario no autenticado');
             return res.status(401).json({ error: 'Usuario no autenticado' });
         }
     
         const { entrada } = req.body;
+        console.log('Contenido de la entrada:', entrada);
+    
         let connection;
         try {
+            console.log('Intentando conectar a la base de datos...');
             connection = await mysql.createConnection(db);
+            console.log('Conexión a la base de datos establecida.');
+            
+            console.log('Ejecutando consulta de inserción...');
             const [result] = await connection.execute(
                 'INSERT INTO diarios (usuario_id, entrada, fecha_hora) VALUES (?, ?, NOW())',
                 [usuarioId, entrada]
             );
+            
+            console.log('Resultado de la consulta de inserción:', result);
             res.json({ message: 'Entrada añadida exitosamente', id: result.insertId });
         } catch (error) {
+            console.error('Error al añadir entrada:', error);
             res.status(500).json({ error: error.message });
         } finally {
             if (connection) {
                 await connection.end();
+                console.log('Conexión a la base de datos cerrada.');
             }
         }
-    };
-    
+    }
 }

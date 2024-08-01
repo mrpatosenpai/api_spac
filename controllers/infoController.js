@@ -194,7 +194,7 @@ export default class infoController {
             }
         }
     }
-    
+
     static async nuevaEntrada(req, res) {
         console.log('Entrando en nuevaEntrada...');
         

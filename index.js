@@ -23,11 +23,6 @@ app.use(session({
     }
 }));
 
-app.use((req, res, next) => {
-    console.log('Sesión actual:', req.session);
-    next();
-});
-
 // Configuración de CORS
 const corsOptions = {
     origin: '*', // Reemplaza con el origen de tu cliente

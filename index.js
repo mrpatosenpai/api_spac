@@ -18,7 +18,7 @@ app.use(session({
     saveUninitialized: true,
     cookie: {
         maxAge: 86400000, // 24 horas
-        secure: true, // Cambia a true si estás utilizando HTTPS
+        secure: false, // Cambia a true si estás utilizando HTTPS
         httpOnly: true,
     }
 }));
@@ -28,7 +28,7 @@ app.use((req, res, next) => {
 });
 // Configuración de CORS
 const corsOptions = {
-    origin: 'https://apispac-production.up.railway.app/', // Reemplaza con el origen de tu cliente
+    origin: 'http://apispac-production.up.railway.app/', // Reemplaza con el origen de tu cliente
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization']
 };

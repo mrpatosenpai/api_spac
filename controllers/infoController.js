@@ -106,7 +106,7 @@ export default class infoController {
         try {
             const { contenido, fecha,usuario_id } = req.body;
             connection = await mysql.createConnection(db);
-            const [result] = await connection.execute("INSERT INTO publicaciones (contenido,fecha, usuario_id) VALUES (?, ?)", [contenido,fecha, usuario_id]);
+            const [result] = await connection.execute("INSERT INTO publicaciones (contenido,fecha, usuario_id) VALUES (?, NOW() ,?)", [contenido,fecha, usuario_id]);
             console.log(result);
             res.json(result);
         } catch (error) {

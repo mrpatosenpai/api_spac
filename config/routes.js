@@ -9,8 +9,8 @@ router.get('/usuarios/:id', infoController.details);
 
 router.post('/escanerFacial', infoController.addScannerResult);
 
-router.post('/publicaciones', infoController.createPost);
-router.get('/publicaciones', infoController.getPosts);
+router.post('/crear/publicaciones', infoController.createPost);
+router.get('/tomar/publicaciones', infoController.getPosts);
 router.post('/usuarios/login', infoController.login)
 router.get('/publicaciones/:usuario_id', infoController.getUserPosts);
 router.post('/usuarios/nuevaEntrada', infoController.nuevaEntrada);

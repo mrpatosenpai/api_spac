@@ -176,18 +176,18 @@ export default class infoController {
     };
     static async MisEntradas(req, res) {
         const usuarioId = req.session.userId;
+        console.log('Usuario ID en MisEntradas:', usuarioId); // Verifica el usuarioId
     
         if (!usuarioId) {
             return res.status(401).json({ error: 'Usuario no autenticado' });
         }
-        console.log('Usuario ID en MisEntradas:', usuarioId); // Agrega esta línea
         let connection;
         try {
             connection = await mysql.createConnection(db);
             const [result] = await connection.execute(
                 'SELECT * FROM diarios WHERE usuario_id = ?', [usuarioId]
             );
-            console.log(result);
+            console.log('Resultado de la consulta:', result); // Verifica el resultado
             res.json(result);
         } catch (error) {
             res.status(500).json({ error: error.message });

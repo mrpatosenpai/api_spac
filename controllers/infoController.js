@@ -152,36 +152,36 @@ export default class infoController {
     }
     static async MisEntradas(req, res) {
         console.log('Entrando en MisEntradas...');
-        
+    
         // Verifica el contenido de req.session
         console.log('Contenido de req.session:', req.session);
         
         const usuarioId = req.session.userId;
         console.log('Usuario ID en MisEntradas:', usuarioId);
-        
+    
         if (!usuarioId) {
             console.log('Usuario no autenticado');
             return res.status(401).json({ error: 'Usuario no autenticado' });
         }
-        
+    
         let connection;
         try {
             console.log('Intentando conectar a la base de datos...');
             connection = await mysql.createConnection(db);
             console.log('Conexión a la base de datos establecida.');
-            
+    
             console.log('Ejecutando consulta...');
             const [result] = await connection.execute(
                 'SELECT * FROM diarios WHERE usuario_id = ?', [usuarioId]
             );
-            
+    
             console.log('Resultado de la consulta:', result);
             
             if (result.length === 0) {
                 console.log('No se encontraron entradas para el usuario.');
                 return res.status(404).json({ message: 'No se encontraron entradas' });
             }
-            
+    
             console.log('Enviando respuesta con entradas...');
             res.json(result);
         } catch (error) {

@@ -46,12 +46,6 @@ app.use(bodyParser.json());
 app.use('/api', routes);
 
 
-// Ruta de prueba para verificar la sesión
-app.get('/api/usuarios/test', (req, res) => {
-    console.log('Session on test route:', req.session);
-    res.json(req.session);
-});
-
 // Ruta principal
 app.get('/', (req, res) => res.send('Bienvenidos a mi API :D'));
 

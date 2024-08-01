@@ -176,6 +176,10 @@ export default class infoController {
     };
     static async MisEntradas(req, res) {
         console.log('Entrando en MisEntradas...'); // Verifica si la función se está llamando
+        
+        // Verifica el contenido de req.session
+        console.log('Contenido de req.session:', req.session);
+        
         const usuarioId = req.session.userId;
         console.log('Usuario ID en MisEntradas:', usuarioId); // Verifica el usuarioId
     
@@ -190,17 +194,22 @@ export default class infoController {
             connection = await mysql.createConnection(db);
             console.log('Conexión a la base de datos establecida.');
     
+            // Verifica la configuración de la conexión a la base de datos
+            console.log('Configuración de la base de datos:', db);
+            
+            console.log('Ejecutando consulta para obtener entradas...');
             const [result] = await connection.execute(
                 'SELECT * FROM diarios WHERE usuario_id = ?', [usuarioId]
             );
     
             console.log('Resultado de la consulta:', result); // Verifica el resultado
-    
+            
             if (result.length === 0) {
                 console.log('No se encontraron entradas para el usuario.');
                 return res.status(404).json({ message: 'No se encontraron entradas' });
             }
     
+            console.log('Enviando respuesta con entradas...');
             res.json(result);
         } catch (error) {
             console.error('Error al recuperar entradas:', error); // Más detalles del error

@@ -3,7 +3,8 @@ import db from '../config/database.js';
 
 
 export default class infoController {
-    /* static async login(req, res) {
+    
+     static async login(req, res) {
         let connection;
         try {
             const { nombre, contrasena } = req.body;
@@ -27,7 +28,11 @@ export default class infoController {
                 await connection.end();
             }
         }
-    } */
+    } 
+    static async testSession(req, res) {
+        console.log('Session on test route:', req.session);
+        res.json(req.session);
+    }
     static async index(req, res) {
         let connection;
         try {

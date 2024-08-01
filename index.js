@@ -45,33 +45,6 @@ app.use(bodyParser.json());
 // Rutas principales
 app.use('/api', routes);
 
-app.post('/api/usuarios/login', async (req, res) => {
-    const { nombre, contrasena } = req.body;
-    let connection;
-
-    try {
-        connection = await mysql.createConnection(db);
-        const [result] = await connection.execute(
-            "SELECT * FROM usuarios WHERE nombre = ? AND contrasena = ?", [nombre, contrasena]
-        );
-
-        if (result.length > 0) {
-            req.session.userId = result[0].id;
-            req.session.userName = result[0].nombre; // Asegúrate de que el campo es correcto
-            console.log('Session UserID after login:', req.session.userId);
-            console.log('Session UserName after login:', req.session.userName);
-            res.json(result[0]);
-        } else {
-            res.status(401).json({ error: 'Credenciales incorrectas' });
-        }
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    } finally {
-        if (connection) {
-            await connection.end();
-        }
-    }
-});
 
 // Ruta de prueba para verificar la sesión
 app.get('/api/usuarios/test', (req, res) => {

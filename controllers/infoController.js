@@ -11,11 +11,11 @@ export default class infoController {
             const [result] = await connection.execute("SELECT * FROM usuarios WHERE nombre = ? AND contrasena = ?", [nombre, contrasena]);
     
             if (result.length > 0) {
-                // Guarda el ID y el nombre de usuario en la sesión
                 req.session.userId = result[0].id;
-                req.session.userName = result[0].nombre;  // Guarda el nombre de usuario
-                console.log('Session UserID after login:', req.session.userId); // Verifica si se guarda correctamente
-                console.log('Session UserName after login:', req.session.userName); // Verifica si se guarda correctamente
+                req.session.userName = result[0].nombre;
+                console.log('Session UserID after login:', req.session.userId);
+                console.log('Session UserName after login:', req.session.userName);
+                console.log('Session after login:', req.session); // Verifica si se guarda correctamente
                 res.json(result[0]);
             } else {
                 res.status(401).json({ error: 'Credenciales incorrectas' });

@@ -190,11 +190,12 @@ export default class infoController {
             console.log('Resultado de la consulta:', result); // Verifica el resultado
             res.json(result);
         } catch (error) {
+            console.error('Error al recuperar entradas:', error); // Más detalles del error
             res.status(500).json({ error: error.message });
         } finally {
             if (connection) {
                 await connection.end();
             }
         }
-    }
+    };
 }

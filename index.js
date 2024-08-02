@@ -46,7 +46,7 @@ app.use('/api', routes);
 
 
 // Ruta principal
-app.get('/', (req, res) => res.send('Bienvenidos a mi API :D'));
+app.get('/', (req, res) => res.send('Bienvenidos a mi API :D yuju'));
 
 const server = app.listen(process.env.PORT || 8000, () => {
     console.log(`Servidor corriendo en puerto: ${server.address().port}`);

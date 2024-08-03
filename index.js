@@ -21,6 +21,10 @@ redisClient.connect()
   })
   .catch((err) => console.error('Error al conectar a Redis', err));
 
+  redisClient.on('connect', () => {
+    console.log('Conectado a Redis');
+  });
+
 const redisStore = new RedisStore({
     client: redisClient
 });
@@ -68,3 +72,7 @@ app.get('/', (req, res) => res.send('Bienvenidos a mi API :D yuju'));
 const server = app.listen(process.env.PORT || 8000, () => {
   console.log(`Servidor corriendo en puerto: ${server.address().port}`);
 });
+
+redisClient.on('end', () => {
+    console.log('Conexión con Redis cerrada');
+  });

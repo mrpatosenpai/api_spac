@@ -81,12 +81,12 @@ export default class infoController {
     static async createPost(req, res) {
         let connection;
         try {
-            const { contenido, fecha } = req.body;
+            const { contenido } = req.body;
             const usuarioId = req.session.userId;
     
-            // Validar que los parámetros estén definidos
-            if (typeof contenido === 'undefined' || typeof fecha === 'undefined') {
-                return res.status(400).json({ 'error': 'Contenido y fecha son requeridos' });
+            // Validar que el contenido esté definido
+            if (typeof contenido === 'undefined') {
+                return res.status(400).json({ 'error': 'Contenido es requerido' });
             }
     
             if (!usuarioId) {
@@ -94,7 +94,6 @@ export default class infoController {
             }
     
             console.log('Contenido:', contenido);
-            console.log('Fecha:', fecha);
             console.log('Usuario ID:', usuarioId);
     
             connection = await mysql.createConnection(db);
@@ -113,6 +112,7 @@ export default class infoController {
             }
         }
     }
+    
       
     static async getPosts(req, res) {
         let connection;

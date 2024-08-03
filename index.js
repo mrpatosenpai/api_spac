@@ -4,9 +4,7 @@ import RedisStore from 'connect-redis';
 import { createClient } from 'redis';
 import cors from 'cors';
 import bodyParser from 'body-parser';
-import routes from './config/routes.js'
-
-
+import routes from './config/routes.js';
 
 // Configurar el cliente Redis
 const redisClient = createClient({
@@ -19,54 +17,53 @@ const redisClient = createClient({
 
 redisClient.on('error', (err) => console.error('Redis Client Error', err));
 
-await redisClient.connect();
+const startServer = async () => {
+    await redisClient.connect();
 
-var sesionmiddleware = session({
-    store: new RedisStore({ client: redisClient }),
-    secret: 'crisvalencia456', 
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-      secure: false, 
-      maxAge: 1000 * 60 * 60 * 24 // 24 horas
-    }
-});
+    const sesionmiddleware = session({
+        store: new RedisStore({ client: redisClient }),
+        secret: 'crisvalencia456',
+        resave: false,
+        saveUninitialized: false,
+        cookie: {
+            secure: false,
+            maxAge: 1000 * 60 * 60 * 24 // 24 horas
+        }
+    });
 
+    const app = express();
 
+    // Middleware para parsear el cuerpo de las peticiones
+    app.use(bodyParser.urlencoded({ extended: false }));
+    app.use(bodyParser.json());
 
-const app = express();
+    // Configuración de CORS
+    const corsOptions = {
+        origin: 'https://apispac-production.up.railway.app',
+        methods: ['GET', 'POST', 'PUT', 'DELETE'],
+        allowedHeaders: ['Content-Type', 'Authorization'],
+        credentials: true // Permite el envío de cookies
+    };
 
-// Middleware para parsear el cuerpo de las peticiones
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
+    app.use(cors(corsOptions));
 
-// Configuración de CORS
-const corsOptions = {
-  origin: 'https://apispac-production.up.railway.app', 
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true // Permite el envío de cookies
+    // Configurar las sesiones con Redis
+    app.use(sesionmiddleware);
+
+    app.use((req, res, next) => {
+        console.log(`${req.method} ${req.url}`);
+        next();
+    });
+
+    app.use('/api', routes);
+
+    app.get('/', (req, res) => res.send('Bienvenidos a mi API :D yuju'));
+
+    const server = app.listen(process.env.PORT || 8000, () => {
+        console.log(`Servidor corriendo en puerto: ${server.address().port}`);
+    });
 };
 
-app.use(cors(corsOptions));
-
-// Configurar las sesiones con Redis
-app.use(sesionmiddleware);
-
-
-app.use((req, res, next) => {
-  console.log(`${req.method} ${req.url}`);
-  next();
-});
-
-
-app.use('/api', routes);
-
-
-app.get('/', (req, res) => res.send('Bienvenidos a mi API :D yuju'));
-
-const server = app.listen(process.env.PORT || 8000, () => {
-  console.log(`Servidor corriendo en puerto: ${server.address().port}`);
-});
+startServer().catch((err) => console.error('Error al iniciar el servidor:', err));
 
 export default app;

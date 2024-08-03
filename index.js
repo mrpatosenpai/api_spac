@@ -62,8 +62,11 @@ const startServer = async () => {
     const server = app.listen(process.env.PORT || 8000, () => {
         console.log(`Servidor corriendo en puerto: ${server.address().port}`);
     });
+
+    // Exporta `app` después de que esté definido
+    return app;
 };
 
 startServer().catch((err) => console.error('Error al iniciar el servidor:', err));
 
-export default app;
+export default startServer;

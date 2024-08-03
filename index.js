@@ -6,20 +6,28 @@ import cors from 'cors';
 import bodyParser from 'body-parser';
 import routes from './config/routes.js';
 
+const app = express();
+
 // Configurar el cliente Redis
 const redisClient = createClient({
     url: "redis://default:hJxxVGvuJawGmHhgA490N9zCu9EyFJPO@redis-10703.c323.us-east-1-2.ec2.redns.redis-cloud.com:10703"
 });
 
-redisClient.on('error', (err) => console.error('Redis Client Error', err));
+redisClient.on('error', (err) => console.error('Redis Client Error:', err));
 
-// Conectar a Redis y luego configurar la sesión
+// Conectar a Redis
 redisClient.connect()
   .then(() => {
     console.log('Conectado a Redis');
-    
+
+    // Verifica el estado del cliente Redis
+    console.log('Estado del cliente Redis:', redisClient.isReady);
+
     // Configurar RedisStore con el cliente Redis conectado
     const redisStore = new RedisStore({ client: redisClient });
+
+    // Verifica el estado de RedisStore
+    console.log('RedisStore creado con el cliente Redis:', redisStore);
 
     // Configuración de la sesión
     const sessionMiddleware = session({
@@ -32,8 +40,6 @@ redisClient.connect()
             maxAge: 1000 * 60 * 60 * 24 // 24 horas
         }
     });
-
-    const app = express();
 
     // Middleware para parsear el cuerpo de las peticiones
     app.use(bodyParser.urlencoded({ extended: false }));
@@ -66,4 +72,4 @@ redisClient.connect()
     });
 
   })
-  .catch((err) => console.error('Error al conectar a Redis', err));
+  .catch((err) => console.error('Error al conectar a Redis:', err));

@@ -44,12 +44,7 @@ const sessionMiddleware = session({
     }
 });
 
-app.use(sessionMiddleware);
 
-app.use((req, res, next) => {
-    console.log('Sesión actual:', req.session);
-    next();
-});
 const app = express();
 
 // Middleware para parsear el cuerpo de las peticiones
@@ -67,7 +62,12 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 // Configurar las sesiones con Redis
+app.use(sessionMiddleware);
 
+app.use((req, res, next) => {
+    console.log('Sesión actual:', req.session);
+    next();
+});
 app.use((req, res, next) => {
   console.log(`${req.method} ${req.url}`);
   next();

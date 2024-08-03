@@ -1,13 +1,21 @@
 import express from 'express';
 import session from 'express-session';
-import RedisStore from 'connect-redis';
-import connectRedis from 'connect-redis';
+import RedisStore from ('connect-redis')(session);
 import { createClient } from 'redis';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import routes from './config/routes.js'
 
-const RedisStore = connectRedis(session);
+var sesionmiddleware = session({
+    store: new RedisStore({ client: redisClient }),
+    secret: 'crisvalencia456', 
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      secure: false, 
+      maxAge: 1000 * 60 * 60 * 24 // 24 horas
+    }
+});
 
 // Configurar el cliente Redis
 const redisClient = createClient({
@@ -38,16 +46,7 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 // Configurar las sesiones con Redis
-app.use(session({
-  store: new RedisStore({ client: redisClient }),
-  secret: 'crisvalencia456', 
-  resave: false,
-  saveUninitialized: false,
-  cookie: {
-    secure: false, 
-    maxAge: 1000 * 60 * 60 * 24 // 24 horas
-  }
-}));
+app.use(sesionmiddleware);
 
 
 app.use((req, res, next) => {

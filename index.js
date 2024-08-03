@@ -1,4 +1,4 @@
-/* import express from 'express';
+import express from 'express';
 import session from 'express-session';
 import RedisStore from 'connect-redis';
 import { createClient } from 'redis';
@@ -67,34 +67,4 @@ app.get('/', (req, res) => res.send('Bienvenidos a mi API :D yuju'));
 
 const server = app.listen(process.env.PORT || 8000, () => {
   console.log(`Servidor corriendo en puerto: ${server.address().port}`);
-}); */
-
-import express from 'express';
-import session from 'express-session';
-import RedisStore from 'connect-redis';
-import { createClient } from 'redis';
-
-const app = express();
-
-const redisClient = createClient({
-    url: "redis://default:hJxxVGvuJawGmHhgA490N9zCu9EyFJPO@redis-10703.c323.us-east-1-2.ec2.redns.redis-cloud.com:10703"
 });
-
-redisClient.on('error', (err) => console.error('Redis Client Error', err));
-redisClient.connect().then(() => console.log('Conectado a Redis'));
-
-const redisStore = new RedisStore({
-    client: redisClient
-});
-
-app.use(session({
-    store: redisStore,
-    secret: 'secret',
-    resave: false,
-    saveUninitialized: false,
-    cookie: { secure: false }
-}));
-
-app.get('/', (req, res) => res.send('Hello World'));
-
-app.listen(3000, () => console.log('Servidor corriendo en puerto 3000'));

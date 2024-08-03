@@ -9,7 +9,10 @@ export default class infoController {
         try {
             const { nombre, contrasena } = req.body;
             connection = await mysql.createConnection(db);
-            const [result] = await connection.execute("SELECT * FROM usuarios WHERE nombre = ? AND contrasena = ?", [nombre, contrasena]);
+            const [result] = await connection.execute(
+                "SELECT * FROM usuarios WHERE nombre = ? AND contrasena = ?",
+                [nombre, contrasena]
+            );
     
             if (result.length > 0) {
                 req.session.userId = result[0].id;

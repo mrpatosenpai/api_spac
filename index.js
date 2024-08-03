@@ -8,11 +8,7 @@ import routes from './config/routes.js';
 
 // Configurar el cliente Redis
 const redisClient = createClient({
-    password: 'hJxxVGvuJawGmHhgA490N9zCu9EyFJPO',
-    socket: {
-        host: 'redis-10703.c323.us-east-1-2.ec2.redns.redis-cloud.com',
-        port: 10703
-    }
+    url: "redis://default:hJxxVGvuJawGmHhgA490N9zCu9EyFJPO@redis-10703.c323.us-east-1-2.ec2.redns.redis-cloud.com:10703"
 });
 
 redisClient.on('error', (err) => console.error('Redis Client Error', err));

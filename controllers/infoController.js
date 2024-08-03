@@ -1,8 +1,8 @@
- import mysql from 'mysql2/promise';
+import mysql from 'mysql2/promise';
 import db from '../config/database.js';
 
 
-/*export default class infoController {
+export default class infoController {
     
     static async login(req, res) {
         let connection;
@@ -78,79 +78,38 @@ import db from '../config/database.js';
         }
     };
 
-    static async details(req, res) {
-        let connection;
-        try {
-            const idb = req.params.id;
-            connection = await mysql.createConnection(db);
-            const [result] = await connection.execute("SELECT * FROM usuarios WHERE id = ?", [idb]);
-            console.log(result);
-            res.json(result);
-        } catch (error) {
-            res.status(500).json({ 'error': error.message });
-        } finally {
-            if (connection) {
-                await connection.end();
-            }
-        }
-    };
-
-    static async addScannerResult(req, res) {
-        let connection;
-        try {
-            const { porcentaje_fumador,fecha_escaner, usuario_id } = req.body;
-            connection = await mysql.createConnection(db);
-            const [result] = await connection.execute("INSERT INTO escanerFacial (porcentaje_fumador,fecha_escaner, usuario_id) VALUES (?,?, ?)", [porcentaje_fumador,fecha_escaner, usuario_id]);
-            console.log(result);
-            res.json(result);
-        } catch (error) {
-            res.status(500).json({ 'error': error.message });
-        } finally {
-            if (connection) {
-                await connection.end();
-            }
-        }
-    };
-
     static async createPost(req, res) {
-        let connection;
-        try {
-            const { contenido, fecha,usuario_id } = req.body;
+          let connection;
+          try {
+            const { contenido, fecha } = req.body;
+            const usuarioId = req.session.userId;
+      
+            if (!usuarioId) {
+              return res.status(401).json({ 'error': 'Usuario no autenticado' });
+            }
+      
             connection = await mysql.createConnection(db);
-            const [result] = await connection.execute("INSERT INTO publicaciones (contenido,fecha, usuario_id) VALUES (?, NOW() ,?)", [contenido,fecha, usuario_id]);
+            const [result] = await connection.execute(
+              "INSERT INTO publicaciones (contenido, fecha, usuario_id) VALUES (?, ?, ?)",
+              [contenido, fecha, usuarioId]
+            );
+      
             console.log(result);
             res.json(result);
-        } catch (error) {
+          } catch (error) {
             res.status(500).json({ 'error': error.message });
-        } finally {
+          } finally {
             if (connection) {
-                await connection.end();
+              await connection.end();
             }
-        }
-    };
-
+          }
+     }
+      
     static async getPosts(req, res) {
         let connection;
         try {
             connection = await mysql.createConnection(db);
             const [result] = await connection.execute("SELECT * FROM publicaciones");
-            console.log(result);
-            res.json(result);
-        } catch (error) {
-            res.status(500).json({ 'error': error.message });
-        } finally {
-            if (connection) {
-                await connection.end();
-            }
-        }
-    };
-
-    static async getUserPosts(req, res) {
-        let connection;
-        try {
-            const usuario_id = req.params.usuario_id;
-            connection = await mysql.createConnection(db);
-            const [result] = await connection.execute("SELECT * FROM publicaciones WHERE usuario_id = ?", [usuario_id]);
             console.log(result);
             res.json(result);
         } catch (error) {
@@ -247,36 +206,3 @@ import db from '../config/database.js';
 };
 
 
- */
-class InfoController {
-    static async login(req, res) {
-      req.session.userId = 5; // Ejemplo de ID de usuario
-      req.session.userName = 'Aria';
-      res.json({ message: 'Login exitoso' });
-    }
-  
-    static async test(req, res) {
-      console.log('Session en test route:', req.session);
-      res.json([]);
-    }
-  
-    static async nuevaEntrada(req, res) {
-      console.log('Session en nuevaEntrada route:', req.session);
-      // Lógica para manejar la nueva entrada
-      res.json({ message: 'Entrada guardada' });
-    }
-  
-    static async misEntradas(req, res) {
-      console.log('Session en misEntradas route:', req.session);
-      const userId = req.session.userId;
-      
-      if (!userId) {
-        return res.status(401).json({ error: 'Usuario no autenticado' });
-      }
-  
-      // Lógica para obtener entradas del usuario
-      res.json([]);
-    }
-  }
-  
-  export default InfoController;

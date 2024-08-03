@@ -63,10 +63,6 @@ const startServer = async () => {
         console.log(`Servidor corriendo en puerto: ${server.address().port}`);
     });
 
-    // Exporta `app` después de que esté definido
-    return app;
 };
 
 startServer().catch((err) => console.error('Error al iniciar el servidor:', err));
-
-export default startServer;

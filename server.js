@@ -4,7 +4,7 @@ import connectRedis from 'connect-redis';
 import { createClient } from 'redis';
 import cors from 'cors';
 import bodyParser from 'body-parser';
-import router from './config/routes'; 
+import routes from './config/routes.js'
 
 const RedisStore = connectRedis(session);
 
@@ -54,7 +54,7 @@ app.use((req, res, next) => {
 });
 
 
-app.use('/api', router);
+app.use('/api', routes);
 
 
 app.get('/', (req, res) => res.send('Bienvenidos a mi API :D yuju'));

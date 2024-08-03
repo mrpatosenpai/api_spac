@@ -14,8 +14,7 @@ const redisClient = createClient({
     socket: {
         host: 'redis-10703.c323.us-east-1-2.ec2.redns.redis-cloud.com',
         port: 10703
-    },
-    legacyMode: true
+    }
 });
 
 redisClient.on('error', (err) => console.error('Redis Client Error', err));

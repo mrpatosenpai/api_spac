@@ -9,6 +9,7 @@ import routes from './config/routes.js';
 
 const app = express();
 
+// Configuración de la base de datos con Sequelize
 const sequelize = new Sequelize('db_spac', 'admin', 'crisvalencia456', {
   host: 'dbspac.cb8i062mmrzs.us-east-2.rds.amazonaws.com',
   dialect: 'mysql',
@@ -23,6 +24,7 @@ sequelize.authenticate()
   .catch((error) => {
     console.error('No se pudo conectar a la base de datos:', error);
   });
+
 
 // Inicializar Sequelize Store
 const SessionStore = SequelizeStore(session.Store);
@@ -52,7 +54,7 @@ app.use(
     resave: false,
     saveUninitialized: false,
     cookie: {
-      secure:  process.env.NODE_ENV === 'production',
+      secure: true /* process.env.NODE_ENV === 'production' */,
       maxAge: 1000 * 60 * 60 * 24, // 24 horas
     },
   })

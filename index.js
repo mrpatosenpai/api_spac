@@ -1,6 +1,6 @@
 import express from 'express';
 import session from 'express-session';
-import db from './config/database.js';
+import Sequelize from 'sequelize';
 import cron from 'node-cron'
 import SequelizeStore  from'connect-session-sequelize';
 import cors from 'cors';
@@ -11,12 +11,18 @@ const app = express();
 
 // Configuración de la base de datos con Sequelize
 
+const sequelize = new Sequelize('db_spac', 'admin', 'crisvalencia456', {
+  host: 'dbspac.cb8i062mmrzs.us-east-2.rds.amazonaws.com',
+  port: 3306,
+  dialect: 'mysql',
+  logging: false,
+});
 
 
 // Inicializar Sequelize Store
 const SessionStore = SequelizeStore(session.Store);
 const sequelizeStore = new SessionStore({
-  db: db,
+  db: sequelize,
 });
 
 // Middleware para parsear el cuerpo de las peticiones

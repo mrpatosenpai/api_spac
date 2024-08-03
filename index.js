@@ -28,7 +28,7 @@ connectRedis();
 redisClient.ping().then(() => console.log('Ping a Redis exitoso')).catch(err => console.error('Error en el ping a Redis', err));
 
 // Configuración de la tienda Redis
-const redisStore = new RedisStore({ client: redisClient });
+const redisStore = new RedisStore({ client: redisClient, prefix: 'sess:' });
 console.log('RedisStore configurado:', redisStore);
 
 
@@ -64,10 +64,6 @@ app.use(cors(corsOptions));
 // Configurar las sesiones con Redis
 app.use(sessionMiddleware);
 
-app.use((req, res, next) => {
-    console.log('Sesión actual:', req.session);
-    next();
-});
 app.use((req, res, next) => {
   console.log(`${req.method} ${req.url}`);
   next();

@@ -79,31 +79,40 @@ export default class infoController {
     };
 
     static async createPost(req, res) {
-          let connection;
-          try {
+        let connection;
+        try {
             const { contenido, fecha } = req.body;
             const usuarioId = req.session.userId;
-      
-            if (!usuarioId) {
-              return res.status(401).json({ 'error': 'Usuario no autenticado' });
+    
+            // Validar que los parámetros estén definidos
+            if (typeof contenido === 'undefined' || typeof fecha === 'undefined') {
+                return res.status(400).json({ 'error': 'Contenido y fecha son requeridos' });
             }
-      
+    
+            if (!usuarioId) {
+                return res.status(401).json({ 'error': 'Usuario no autenticado' });
+            }
+    
+            console.log('Contenido:', contenido);
+            console.log('Fecha:', fecha);
+            console.log('Usuario ID:', usuarioId);
+    
             connection = await mysql.createConnection(db);
             const [result] = await connection.execute(
-              "INSERT INTO publicaciones (contenido, fecha, usuario_id) VALUES (?, NOW(), ?)",
-              [contenido, fecha, usuarioId]
+                "INSERT INTO publicaciones (contenido, fecha, usuario_id) VALUES (?, NOW(), ?)",
+                [contenido, fecha, usuarioId]
             );
-      
+    
             console.log(result);
             res.json(result);
-          } catch (error) {
+        } catch (error) {
             res.status(500).json({ 'error': error.message });
-          } finally {
+        } finally {
             if (connection) {
-              await connection.end();
+                await connection.end();
             }
-          }
-     }
+        }
+    }
       
     static async getPosts(req, res) {
         let connection;

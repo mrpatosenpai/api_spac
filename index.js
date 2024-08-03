@@ -18,7 +18,7 @@ const redisClient = createClient({
 // Manejar errores de conexión a Redis
 redisClient.on('error', (err) => console.error('Redis Client Error', err));
 
-// Configurar las sesiones con Redis cuando Redis esté listo
+// Conectar a Redis y configurar el servidor
 redisClient.connect().then(() => {
     console.log('Conectado a Redis');
 
@@ -66,6 +66,8 @@ redisClient.connect().then(() => {
         console.log(`Servidor corriendo en puerto: ${server.address().port}`);
     });
 
+
 }).catch(err => {
     console.error('Error al conectar a Redis:', err);
 });
+

@@ -1,13 +1,15 @@
 import express from 'express';
 import session from 'express-session';
-import sequelize from './config/database.js';
+import db from './config/database.js';
 import cron from 'node-cron'
-import SequelizeStore from 'connect-session-sequelize';
+import SequelizeStore  from'connect-session-sequelize';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import routes from './config/routes.js';
 
 const app = express();
+
+// Configuración de la base de datos con Sequelize
 
 
 
@@ -57,7 +59,7 @@ cron.schedule('0 0 * * *', () => {
   sequelizeStore.sessionModel.destroy({
     where: {
       expires: {
-        [sequelize.Op.lt]: new Date(),
+        [Sequelize.Op.lt]: new Date(),
       },
     },
   }).then(() => {

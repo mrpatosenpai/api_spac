@@ -20,16 +20,6 @@ export default class infoController {
                 console.log('Session UserID after login:', req.session.userId);
                 console.log('Session UserName after login:', req.session.userName);
                 console.log('Session after login:', req.session); // Verifica si se guarda correctamente
-    
-                // Verifica si la sesión se guarda en Redis
-                redisClient.get(req.sessionID, (err, session) => {
-                    if (err) {
-                        console.error('Error al obtener sesión de Redis:', err);
-                    } else {
-                        console.log('Sesión guardada en Redis:', session);
-                    }
-                });
-    
                 res.json(result[0]);
             } else {
                 res.status(401).json({ error: 'Credenciales incorrectas' });

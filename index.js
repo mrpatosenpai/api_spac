@@ -10,7 +10,12 @@ import routes from './config/routes.js';
 async function startServer() {
     // Configurar el cliente Redis
     const redisClient = createClient({
-      url: 'redis://default:hJxxVGvuJawGmHhgA490N9zCu9EyFJPO@redis-10703.c323.us-east-1-2.ec2.redns.redis-cloud.com:10703',
+        user: "default",
+        password: 'hJxxVGvuJawGmHhgA490N9zCu9EyFJPO',
+        socket: {
+            host: 'redis-10703.c323.us-east-1-2.ec2.redns.redis-cloud.com',
+            port: 10703
+        },
         legacyMode: false
     });
 
@@ -24,7 +29,7 @@ async function startServer() {
 
         // Configurar el middleware de sesión con Redis
         const sesionmiddleware = session({
-            store: new RedisStore({ client: redisClient }),
+            store: new RedisStore({}),
             secret: 'crisvalencia456',
             resave: false,
             saveUninitialized: false,

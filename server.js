@@ -1,5 +1,6 @@
 import express from 'express';
 import session from 'express-session';
+import RedisStore from 'connect-redis';
 import connectRedis from 'connect-redis';
 import { createClient } from 'redis';
 import cors from 'cors';

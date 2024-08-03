@@ -1,8 +1,8 @@
-import mysql from 'mysql2/promise';
+ import mysql from 'mysql2/promise';
 import db from '../config/database.js';
 
 
-export default class infoController {
+/*export default class infoController {
     
     static async login(req, res) {
         let connection;
@@ -247,3 +247,36 @@ export default class infoController {
 };
 
 
+ */
+class InfoController {
+    static async login(req, res) {
+      req.session.userId = 5; // Ejemplo de ID de usuario
+      req.session.userName = 'Aria';
+      res.json({ message: 'Login exitoso' });
+    }
+  
+    static async test(req, res) {
+      console.log('Session en test route:', req.session);
+      res.json([]);
+    }
+  
+    static async nuevaEntrada(req, res) {
+      console.log('Session en nuevaEntrada route:', req.session);
+      // Lógica para manejar la nueva entrada
+      res.json({ message: 'Entrada guardada' });
+    }
+  
+    static async misEntradas(req, res) {
+      console.log('Session en misEntradas route:', req.session);
+      const userId = req.session.userId;
+      
+      if (!userId) {
+        return res.status(401).json({ error: 'Usuario no autenticado' });
+      }
+  
+      // Lógica para obtener entradas del usuario
+      res.json([]);
+    }
+  }
+  
+  export default InfoController;

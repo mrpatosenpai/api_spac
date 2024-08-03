@@ -12,7 +12,7 @@ const app = express();
 // Configuración de la base de datos con Sequelize
 const sequelize = new Sequelize('db_spac', 'admin', 'crisvalencia456', {
   host: 'dbspac.cb8i062mmrzs.us-east-2.rds.amazonaws.com',
-  port: 3306,
+/*   port: 3306, */
   dialect: 'mysql',
   logging: false,
 });

@@ -28,7 +28,7 @@ connectRedis();
 redisClient.ping().then(() => console.log('Ping a Redis exitoso')).catch(err => console.error('Error en el ping a Redis', err));
 
 // Configuración de la tienda Redis
-const redisStore = new RedisStore({ client: redisClient, prefix: 'sess:' });
+const redisStore = new RedisStore({ client: redisClient, prefix: 'sess:86400' });
 console.log('RedisStore configurado:', redisStore);
 
 

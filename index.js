@@ -17,9 +17,11 @@ redisClient.connect()
   .then(() => console.log('Conectado a Redis'))
   .catch((err) => console.error('Error al conectar a Redis', err));
 
+const redisStore = new RedisStore({redisClient})
+
 // Configuración de la sesión
 const sessionMiddleware = session({
-    store: new RedisStore({ client: redisClient }),
+    store: redisStore,
     secret: 'crisvalencia456',
     resave: false,
     saveUninitialized: false,

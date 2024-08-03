@@ -14,7 +14,8 @@ async function startServer() {
         socket: {
             host: 'redis-10703.c323.us-east-1-2.ec2.redns.redis-cloud.com',
             port: 10703
-        }
+        },
+        legacyMode: true
     });
 
     // Manejar errores de conexión a Redis

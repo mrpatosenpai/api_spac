@@ -33,9 +33,8 @@ export default class infoController {
         }
     }
     static async testSession(req, res) {
-        const usuarioId = req.session.userId;
-        console.log('Session on test route:', usuarioId);
-        res.json(usuarioId);
+        console.log('Session on test route:', req.session);
+        res.json(req.session);
     }
     static async index(req, res) {
         let connection;
@@ -165,10 +164,10 @@ export default class infoController {
 
     static async misentradas(req, res) {
         console.log('Entrando en MisEntradas...');
-        const usuarioNombre = req.session.userName; // Obtiene el nombre de usuario desde la sesión
-        console.log('Session UserName in entradas:', usuarioNombre);
+        const usuarioId = req.session.userId; // Obtiene el ID del usuario desde la sesión
+        console.log('Session UserID in entradas:', usuarioId);
     
-        if (!usuarioNombre) {
+        if (!usuarioId) {
             console.log('Usuario no autenticado');
             return res.status(401).json({ error: 'Usuario no autenticado' });
         }
@@ -178,22 +177,6 @@ export default class infoController {
             console.log('Intentando conectar a la base de datos...');
             connection = await mysql.createConnection(db);
             console.log('Conexión a la base de datos establecida.');
-    
-            console.log('Ejecutando consulta para obtener el ID del usuariooo...');
-            // Busca el ID del usuario a través del nombre de usuario
-            const [userResult] = await connection.execute(
-                'SELECT id FROM usuarios WHERE nombre = ?', [usuarioNombre]
-            );
-    
-            console.log('Resultado de consulta para obtener ID del usuario:', userResult);
-    
-            if (userResult.length === 0) {
-                console.log('No se encontró el usuario.');
-                return res.status(404).json({ message: 'Usuario no encontrado' });
-            }
-    
-            const usuarioId = userResult[0].id;
-            console.log('ID del usuario obtenido:', usuarioId);
     
             console.log('Ejecutando consulta de entradas...');
             // Busca las entradas usando el ID del usuario

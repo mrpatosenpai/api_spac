@@ -1,6 +1,6 @@
 import express from 'express';
 import session from 'express-session';
-import Sequelize from 'sequelize';
+import { Sequelize } from 'sequelize';
 import cron from 'node-cron';
 import SequelizeStore from 'connect-session-sequelize';
 import cors from 'cors';
@@ -9,13 +9,20 @@ import routes from './config/routes.js';
 
 const app = express();
 
-// Configuración de la base de datos con Sequelize
 const sequelize = new Sequelize('db_spac', 'admin', 'crisvalencia456', {
   host: 'dbspac.cb8i062mmrzs.us-east-2.rds.amazonaws.com',
-/*   port: 3306, */
   dialect: 'mysql',
   logging: false,
 });
+
+// Verificación de la conexión
+sequelize.authenticate()
+  .then(() => {
+    console.log('Conexión a la base de datos establecida con éxito.');
+  })
+  .catch((error) => {
+    console.error('No se pudo conectar a la base de datos:', error);
+  });
 
 // Inicializar Sequelize Store
 const SessionStore = SequelizeStore(session.Store);

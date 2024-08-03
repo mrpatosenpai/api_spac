@@ -33,8 +33,9 @@ export default class infoController {
         }
     }
     static async testSession(req, res) {
-        console.log('Session on test route:', req.session);
-        res.json(req.session);
+        const usuarioId = req.session.userId;
+        console.log('Session on test route:', usuarioId);
+        res.json(usuarioId);
     }
     static async index(req, res) {
         let connection;

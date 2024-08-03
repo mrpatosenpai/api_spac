@@ -2,7 +2,6 @@ import express from 'express';
 import session from 'express-session';
 import RedisStore from 'connect-redis';
 import { createClient } from 'redis';
-import connectRedis from 'connect-redis';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import routes from './config/routes.js'
@@ -19,7 +18,11 @@ const redisClient = createClient({
     legacyMode: true
 });
 
-var sesionmiddleware = connectRedis(session({
+redisClient.on('error', (err) => console.error('Redis Client Error', err));
+
+await redisClient.connect();
+
+var sesionmiddleware = session({
     store: new RedisStore({ client: redisClient }),
     secret: 'crisvalencia456', 
     resave: false,
@@ -28,9 +31,9 @@ var sesionmiddleware = connectRedis(session({
       secure: false, 
       maxAge: 1000 * 60 * 60 * 24 // 24 horas
     }
-}));
+});
 
-redisClient.on('error', (err) => console.error('Redis Client Error', err));
+
 
 const app = express();
 

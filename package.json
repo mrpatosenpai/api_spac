@@ -1,10 +1,10 @@
 {
   "name": "myapp",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "server.js",
   "type": "module",
   "scripts": {
-    "start": "NODE_ENV=production node index.js",
+    "start": "NODE_ENV=production node server.js",
     "start:dev": "NODE_ENV=development npx nodemon --exec npx babel-node server.js",
     "test": "NODE_ENV=test npx nodemon --exec npx mocha --require @babel/register"
   },

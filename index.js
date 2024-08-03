@@ -7,7 +7,7 @@ import bodyParser from 'body-parser';
 import routes from './config/routes.js';
 
 // Configurar el cliente Redis
-const redisClient = createClient({
+let redisClient = createClient({
     url: "redis://default:hJxxVGvuJawGmHhgA490N9zCu9EyFJPO@redis-10703.c323.us-east-1-2.ec2.redns.redis-cloud.com:10703"
 });
 
@@ -25,12 +25,12 @@ redisClient.connect()
     console.log('Conectado a Redis');
   });
 
-const redisStore = new RedisStore({
+let redisStore = new RedisStore({
     client: redisClient
 });
 
 // Configuración de la sesión
-const sessionMiddleware = session({
+let sessionMiddleware = session({
     store: redisStore,
     secret: 'crisvalencia456',
     resave: false,

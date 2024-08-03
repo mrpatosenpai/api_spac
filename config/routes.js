@@ -18,4 +18,31 @@ routes.get('/usuarios/entradas', infoController.misentradas);
 // Nueva ruta para testSession
 routes.get('/usuarios/test', infoController.testSession);
 
+routes.get('/some-route', (req, res) => {
+    if (req.session.userId && req.session.userName) {
+        res.json({
+            userId: req.session.userId,
+            userName: req.session.userName
+        });
+    } else {
+        res.status(401).json({ error: 'Usuario no autenticado' });
+    }
+});
+
+routes.get('/protected', (req, res) => {
+    if (!req.session.userId) {
+        return res.status(401).json({ error: 'Usuario no autenticado' });
+    }
+    res.json({ message: 'Acceso permitido', user: req.session.userName });
+});
+
+routes.post('/logout', (req, res) => {
+    req.session.destroy(err => {
+        if (err) {
+            return res.status(500).json({ error: 'Error al cerrar sesión' });
+        }
+        res.json({ message: 'Sesión cerrada exitosamente' });
+    });
+});
+
 export default routes;

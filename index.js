@@ -16,7 +16,7 @@ const app = express();
 // Inicializar Sequelize Store
 const SessionStore = SequelizeStore(session.Store);
 const sequelizeStore = new SessionStore({
-  db: sequelize,
+  db: db,
 });
 
 // Middleware para parsear el cuerpo de las peticiones

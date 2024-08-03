@@ -1,10 +1,22 @@
 import express from 'express';
 import session from 'express-session';
-import RedisStore from ('connect-redis')(session);
+import RedisStore from 'connect-redis';
 import { createClient } from 'redis';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import routes from './config/routes.js'
+
+
+
+// Configurar el cliente Redis
+const redisClient = createClient({
+    password: 'hJxxVGvuJawGmHhgA490N9zCu9EyFJPO',
+    socket: {
+        host: 'redis-10703.c323.us-east-1-2.ec2.redns.redis-cloud.com',
+        port: 10703
+    },
+    legacyMode: true
+});
 
 var sesionmiddleware = session({
     store: new RedisStore({ client: redisClient }),
@@ -15,16 +27,6 @@ var sesionmiddleware = session({
       secure: false, 
       maxAge: 1000 * 60 * 60 * 24 // 24 horas
     }
-});
-
-// Configurar el cliente Redis
-const redisClient = createClient({
-    password: 'hJxxVGvuJawGmHhgA490N9zCu9EyFJPO',
-    socket: {
-        host: 'redis-10703.c323.us-east-1-2.ec2.redns.redis-cloud.com',
-        port: 10703
-    },
-    legacyMode: true
 });
 
 redisClient.on('error', (err) => console.error('Redis Client Error', err));

@@ -18,63 +18,54 @@ const redisClient = createClient({
 // Manejar errores de conexión a Redis
 redisClient.on('error', (err) => console.error('Redis Client Error', err));
 
-// Función para iniciar el servidor
-const startServer = async () => {
-    try {
-        // Conectar a Redis
-        await redisClient.connect();
-        
-        // Configurar el middleware de sesión con Redis
-        const sesionmiddleware = session({
-            store: new RedisStore({ client: redisClient }),
-            secret: 'crisvalencia456',
-            resave: false,
-            saveUninitialized: false,
-            cookie: {
-                secure: false,
-                maxAge: 1000 * 60 * 60 * 24 // 24 horas
-            }
-        });
+// Configurar las sesiones con Redis cuando Redis esté listo
+redisClient.connect().then(() => {
+    console.log('Conectado a Redis');
 
-        const app = express();
+    // Configurar el middleware de sesión con Redis
+    const sesionmiddleware = session({
+        store: new RedisStore({ client: redisClient }),
+        secret: 'crisvalencia456',
+        resave: false,
+        saveUninitialized: false,
+        cookie: {
+            secure: false,
+            maxAge: 1000 * 60 * 60 * 24 // 24 horas
+        }
+    });
 
-        // Middleware para parsear el cuerpo de las peticiones
-        app.use(bodyParser.urlencoded({ extended: false }));
-        app.use(bodyParser.json());
+    const app = express();
 
-        // Configuración de CORS
-        const corsOptions = {
-            origin: 'https://apispac-production.up.railway.app',
-            methods: ['GET', 'POST', 'PUT', 'DELETE'],
-            allowedHeaders: ['Content-Type', 'Authorization'],
-            credentials: true // Permite el envío de cookies
-        };
+    // Middleware para parsear el cuerpo de las peticiones
+    app.use(bodyParser.urlencoded({ extended: false }));
+    app.use(bodyParser.json());
 
-        app.use(cors(corsOptions));
+    // Configuración de CORS
+    const corsOptions = {
+        origin: 'https://apispac-production.up.railway.app',
+        methods: ['GET', 'POST', 'PUT', 'DELETE'],
+        allowedHeaders: ['Content-Type', 'Authorization'],
+        credentials: true // Permite el envío de cookies
+    };
 
-        // Configurar las sesiones con Redis
-        app.use(sesionmiddleware);
+    app.use(cors(corsOptions));
 
-        app.use((req, res, next) => {
-            console.log(`${req.method} ${req.url}`);
-            next();
-        });
+    // Configurar las sesiones con Redis
+    app.use(sesionmiddleware);
 
-        app.use('/api', routes);
+    app.use((req, res, next) => {
+        console.log(`${req.method} ${req.url}`);
+        next();
+    });
 
-        app.get('/', (req, res) => res.send('Bienvenidos a mi API :D yuju'));
+    app.use('/api', routes);
 
-        const server = app.listen(process.env.PORT || 8000, () => {
-            console.log(`Servidor corriendo en puerto: ${server.address().port}`);
-        });
+    app.get('/', (req, res) => res.send('Bienvenidos a mi API :D yuju'));
 
-        // Exportar la instancia de `app`
-        return app;
+    const server = app.listen(process.env.PORT || 8000, () => {
+        console.log(`Servidor corriendo en puerto: ${server.address().port}`);
+    });
 
-    } catch (err) {
-        console.error('Error al iniciar el servidor:', err);
-    }
-};
-
-// Iniciar el servidor
-startServer();
+}).catch(err => {
+    console.error('Error al conectar a Redis:', err);
+});

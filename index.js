@@ -19,14 +19,10 @@ redisClient.on('error', (err) => console.error('Redis Client Error:', err));
 redisClient.connect()
   .then(() => {
     console.log('Conectado a Redis');
-
-    // Verifica el estado del cliente Redis
     console.log('Estado del cliente Redis:', redisClient.isReady);
 
     // Configurar RedisStore con el cliente Redis conectado
     const redisStore = new RedisStore({ client: redisClient });
-
-    // Verifica el estado de RedisStore
     console.log('RedisStore creado con el cliente Redis:', redisStore);
 
     // Configuración de la sesión

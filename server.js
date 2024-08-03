@@ -1,7 +1,6 @@
 import express from 'express';
 import session from 'express-session';
 import connectRedis from 'connect-redis';
-import { createClient } from 'redis';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import routes from './config/routes.js'
@@ -9,7 +8,7 @@ import routes from './config/routes.js'
 const RedisStore = connectRedis(session);
 
 // Configurar el cliente Redis
-const client = createClient({
+const redisClient = new Redis({
     password: 'hJxxVGvuJawGmHhgA490N9zCu9EyFJPO',
     socket: {
         host: 'redis-10703.c323.us-east-1-2.ec2.redns.redis-cloud.com',

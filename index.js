@@ -7,30 +7,33 @@ import bodyParser from 'body-parser';
 import routes from './config/routes.js';
 
 // Configurar el cliente Redis
-let redisClient = createClient({
-    url: "redis://default:hJxxVGvuJawGmHhgA490N9zCu9EyFJPO@redis-10703.c323.us-east-1-2.ec2.redns.redis-cloud.com:10703"
+const redisClient = createClient({
+    url: 'redis://default:hJxxVGvuJawGmHhgA490N9zCu9EyFJPO@redis-10703.c323.us-east-1-2.ec2.redns.redis-cloud.com:10703'
 });
 
 redisClient.on('error', (err) => console.error('Redis Client Error', err));
 
-redisClient.connect()
-  .then(() => {
-    console.log('Conectado a Redis');
-    // Verifica si el cliente Redis está definido
-    console.log('Estado del cliente Redis:', redisClient.isReady);
-  })
-  .catch((err) => console.error('Error al conectar a Redis', err));
+async function connectRedis() {
+    try {
+        await redisClient.connect();
+        console.log('Conectado a Redis');
+    } catch (err) {
+        console.error('Error al conectar a Redis', err);
+    }
+}
 
-  redisClient.on('connect', () => {
-    console.log('Conectado a Redis');
-  });
+connectRedis();
 
-let redisStore = new RedisStore({
-    client: redisClient
-});
+// Verifica la conexión del cliente Redis
+redisClient.ping().then(() => console.log('Ping a Redis exitoso')).catch(err => console.error('Error en el ping a Redis', err));
+
+// Configuración de la tienda Redis
+const redisStore = new RedisStore({ client: redisClient });
+console.log('RedisStore configurado:', redisStore);
+
 
 // Configuración de la sesión
-let sessionMiddleware = session({
+const sessionMiddleware = session({
     store: redisStore,
     secret: 'crisvalencia456',
     resave: false,

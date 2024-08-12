@@ -11,7 +11,7 @@ routes.get('/tomar/publicaciones', infoController.getPosts);
 routes.post('/usuarios/login', infoController.login);
 routes.post('/usuarios/nuevaEntrada', infoController.nuevaEntrada);
 routes.get('/usuarios/entradas', infoController.misentradas);
-routes.get('/usuarios/misdatos',infoController.misdatos)
+routes.get('/usuarios/misdatosUSU',infoController.misdatos)
 
 // Nueva ruta para testSession
 routes.get('/usuarios/test', infoController.testSession);

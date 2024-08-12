@@ -172,6 +172,48 @@ export default class infoController {
         }
     }
 
+    static async misdatos(req, res) {
+        console.log('Entrando en mis datos...');
+        const usuarioId = req.session.userId; // Obtiene el ID del usuario desde la sesión
+        console.log('Session UserID in entradas:', usuarioId);
+    
+        if (!usuarioId) {
+            console.log('Usuario no autenticado');
+            return res.status(401).json({ error: 'Usuario no autenticado' });
+        }
+    
+        let connection;
+        try {
+            console.log('Intentando conectar a la base de datos...');
+            connection = await mysql.createConnection(db);
+            console.log('Conexión a la base de datos establecida.');
+    
+            console.log('Ejecutando consulta de entradas...');
+            // Busca las entradas usando el ID del usuario
+            const [result] = await connection.execute(
+                'SELECT * FROM usuarios WHERE usuario_id = ?', [usuarioId]
+            );
+    
+            console.log('Resultado de la consulta de entradas:', result);
+    
+            if (result.length === 0) {
+                console.log('No se encontraron entradas para el usuario.');
+                return res.status(404).json({ message: 'No se encontraron entradas' });
+            }
+    
+            console.log('Enviando respuesta con entradas...');
+            res.json(result);
+        } catch (error) {
+            console.error('Error al recuperar entradas:', error);
+            res.status(500).json({ error: error.message });
+        } finally {
+            if (connection) {
+                await connection.end();
+                console.log('Conexión a la base de datos cerrada.');
+            }
+        }
+    }
+
     static async nuevaEntrada(req, res) {
         console.log('Entrando en nuevaEntrada...');
         

@@ -174,8 +174,7 @@ export default class infoController {
 
     static async misdatos(req, res) {
         console.log('Entrando en mis datos...');
-        const usuarioId = req.session.userId; // Obtiene el ID del usuario desde la sesión
-        console.log('Session UserID in entradas:', usuarioId);
+        const usuarioId = req.session.userId;
     
         if (!usuarioId) {
             console.log('Usuario no autenticado');
@@ -186,26 +185,23 @@ export default class infoController {
         try {
             console.log('Intentando conectar a la base de datos...');
             connection = await mysql.createConnection(db);
-            console.log('Conexión a la base de datos establecida.');
     
-            console.log('Ejecutando consulta de entradas...');
-            // Busca las entradas usando el ID del usuario
+            console.log('Ejecutando consulta...');
             const [result] = await connection.execute(
                 'SELECT * FROM usuarios WHERE usuario_id = ?', [usuarioId]
             );
     
-            console.log('Resultado de la consulta de entradas:', result);
+            console.log('Resultado de la consulta:', result);
     
             if (result.length === 0) {
                 console.log('No se encontraron entradas para el usuario.');
                 return res.status(404).json({ message: 'No se encontraron entradas' });
             }
     
-            console.log('Enviando respuesta con entradas...');
             res.json(result);
         } catch (error) {
-            console.error('Error al recuperar entradas:', error);
-            res.status(500).json({ error: error.message });
+            console.error('Error en la API:', error.message);
+            res.status(500).json({ error: 'Error interno del servidor' });
         } finally {
             if (connection) {
                 await connection.end();

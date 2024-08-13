@@ -172,7 +172,7 @@ export default class infoController {
         }
     }
 
-    static async misdatosUSU(req, res) {
+    static async misdatos(req, res) {
         console.log('Entrando en mis datos...');
         const usuarioId = req.session.userId; // Obtiene el ID del usuario desde la sesión
         console.log('Session UserID in entradas:', usuarioId);

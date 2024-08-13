@@ -188,7 +188,7 @@ export default class infoController {
     
             console.log('Ejecutando consulta...');
             const [result] = await connection.execute(
-                'SELECT * FROM usuarios WHERE usuario_id = ?', [usuarioId]
+                'SELECT * FROM usuarios WHERE id = ?', [usuarioId]
             );
     
             console.log('Resultado de la consulta:', result);

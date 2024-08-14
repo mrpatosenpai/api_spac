@@ -12,6 +12,7 @@ routes.post('/usuarios/login', infoController.login);
 routes.post('/usuarios/nuevaEntrada', infoController.nuevaEntrada);
 routes.get('/usuarios/entradas', infoController.misentradas);
 routes.get('/usuarios/misdatos',infoController.misdatos)
+routes.get('/usuarios/racha', infoController.obtenerRacha);
 
 // Nueva ruta para testSession
 routes.get('/usuarios/test', infoController.testSession);

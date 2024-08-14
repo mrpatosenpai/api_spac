@@ -17,9 +17,45 @@ export default class infoController {
             if (result.length > 0) {
                 req.session.userId = result[0].id;
                 req.session.userName = result[0].nombre;
+
+                // Lógica para la racha
+                const userId = result[0].id;
+                const [rachaResult] = await connection.execute(
+                    "SELECT * FROM racha WHERE usuario_id = ?",
+                    [userId]
+                );
+
+                const today = new Date();
+                const todayDateString = today.toISOString().split('T')[0];
+
+                if (rachaResult.length > 0) {
+                    const ultimaConexion = new Date(rachaResult[0].ultima_conexion);
+                    const diasDiferencia = Math.floor((today - ultimaConexion) / (1000 * 60 * 60 * 24));
+
+                    if (diasDiferencia === 1) {
+                        // Aumentar la racha si es el día siguiente
+                        await connection.execute(
+                            "UPDATE racha SET racha_actual = racha_actual + 1, ultima_fecha_login = ? WHERE usuario_id = ?",
+                            [todayDateString, userId]
+                        );
+                    } else if (diasDiferencia > 1) {
+                        // Resetear la racha si ha pasado más de un día
+                        await connection.execute(
+                            "UPDATE racha SET racha_actual = 1, ultima_fecha_login = ? WHERE usuario_id = ?",
+                            [todayDateString, userId]
+                        );
+                    }
+                    // Si la diferencia es 0 (mismo día), no hacer nada.
+                } else {
+                    // Crear un nuevo registro de racha si no existe
+                    await connection.execute(
+                        "INSERT INTO racha (usuario_id, racha_actual, ultima_fecha_login) VALUES (?, 1, ?)",
+                        [userId, todayDateString]
+                    );
+                }
+
                 console.log('Session UserID after login:', req.session.userId);
                 console.log('Session UserName after login:', req.session.userName);
-                console.log('Session after login:', req.session); // Verifica si se guarda correctamente
                 res.json(result[0]);
             } else {
                 res.status(401).json({ error: 'Credenciales incorrectas' });
@@ -32,6 +68,34 @@ export default class infoController {
             }
         }
     }
+    static async obtenerRacha(req, res) {
+        let connection;
+        try {
+            const userId = req.session.userId;
+            if (!userId) {
+                return res.status(401).json({ error: 'Usuario no autenticado' });
+            }
+    
+            connection = await mysql.createConnection(db);
+            const [result] = await connection.execute(
+                "SELECT racha_actual FROM racha WHERE usuario_id = ?",
+                [userId]
+            );
+    
+            if (result.length > 0) {
+                res.json(result[0]);
+            } else {
+                res.json({ racha_actual: 0 });
+            }
+        } catch (error) {
+            res.status(500).json({ 'error': error.message });
+        } finally {
+            if (connection) {
+                await connection.end();
+            }
+        }
+    }
+
     static async testSession(req, res) {
         console.log('Session on test route:', req.session);
         res.json(req.session);

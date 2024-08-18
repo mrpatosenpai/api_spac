@@ -314,6 +314,20 @@ export default class infoController {
         }
     };
     
+    static async logout(req, res) {
+        try {
+            req.session.destroy((err) => {
+                if (err) {
+                    return res.status(500).json({ error: 'No se pudo cerrar la sesión' });
+                }
+                res.clearCookie('connect.sid'); // Limpia la cookie de la sesión
+                return res.status(200).json({ message: 'Sesión cerrada con éxito' });
+            });
+        } catch (error) {
+            res.status(500).json({ error: error.message });
+        }
+    }
+    
 };
 
 

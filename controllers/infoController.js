@@ -147,23 +147,25 @@ export default class infoController {
         try {
             const { contenido } = req.body;
             const usuarioId = req.session.userId;
+            const nombreUsuario = req.session.userName; // Obtener el nombre del usuario de la sesión
     
             // Validar que el contenido esté definido
             if (typeof contenido === 'undefined') {
                 return res.status(400).json({ 'error': 'Contenido es requerido' });
             }
     
-            if (!usuarioId) {
+            if (!usuarioId || !nombreUsuario) {
                 return res.status(401).json({ 'error': 'Usuario no autenticado' });
             }
     
             console.log('Contenido:', contenido);
             console.log('Usuario ID:', usuarioId);
+            console.log('Nombre Usuario:', nombreUsuario);
     
             connection = await mysql.createConnection(db);
             const [result] = await connection.execute(
-                "INSERT INTO publicaciones (contenido, fecha, usuario_id) VALUES (?, NOW(), ?)",
-                [contenido, usuarioId]
+                "INSERT INTO publicaciones (contenido, fecha, usuario_id, nombre_usuario) VALUES (?, NOW(), ?, ?)",
+                [contenido, usuarioId, nombreUsuario] // Pasar el nombre del usuario
             );
     
             console.log(result);
@@ -313,7 +315,7 @@ export default class infoController {
             }
         }
     };
-    
+
     static async logout(req, res) {
         try {
             req.session.destroy((err) => {

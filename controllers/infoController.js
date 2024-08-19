@@ -213,9 +213,12 @@ export default class infoController {
             console.log('Conexión a la base de datos establecida.');
     
             console.log('Ejecutando consulta de entradas...');
-            // Busca las entradas usando el ID del usuario
+            // Busca las entradas usando el ID del usuario y formatea la fecha y hora
             const [result] = await connection.execute(
-                'SELECT * FROM diarios WHERE usuario_id = ?', [usuarioId]
+                `SELECT *, DATE_FORMAT(fecha, '%Y-%m-%d') AS fecha_formateada, 
+                        DATE_FORMAT(fecha, '%H:%i') AS hora_formateada 
+                 FROM diarios 
+                 WHERE usuario_id = ?`, [usuarioId]
             );
     
             console.log('Resultado de la consulta de entradas:', result);
@@ -225,8 +228,15 @@ export default class infoController {
                 return res.status(404).json({ message: 'No se encontraron entradas' });
             }
     
+            // Formatea el resultado para incluir solo la fecha y hora formateada
+            const entradasFormateadas = result.map(entrada => ({
+                ...entrada,
+                fecha: entrada.fecha_formateada,
+                hora: entrada.hora_formateada
+            }));
+    
             console.log('Enviando respuesta con entradas...');
-            res.json(result);
+            res.json(entradasFormateadas);
         } catch (error) {
             console.error('Error al recuperar entradas:', error);
             res.status(500).json({ error: error.message });

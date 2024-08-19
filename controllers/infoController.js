@@ -215,8 +215,8 @@ export default class infoController {
             console.log('Ejecutando consulta de entradas...');
             // Busca las entradas usando el ID del usuario y formatea la fecha y hora
             const [result] = await connection.execute(
-                `SELECT *, DATE_FORMAT(fecha, '%Y-%m-%d') AS fecha_formateada, 
-                        DATE_FORMAT(fecha, '%H:%i') AS hora_formateada 
+                `SELECT *, DATE_FORMAT(fecha_hora, '%Y-%m-%d') AS fecha_formateada, 
+                        DATE_FORMAT(fecha_hora, '%H:%i') AS hora_formateada 
                  FROM diarios 
                  WHERE usuario_id = ?`, [usuarioId]
             );

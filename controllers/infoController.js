@@ -16,7 +16,7 @@ export default class infoController {
     
             if (result.length > 0) {
                 req.session.userId = result[0].id;
-                req.session.userName = result[1].nombre;
+                req.session.userName = result[0].nombre;
 
                 // Lógica para la racha
                 const userId = result[0].id;
@@ -56,7 +56,7 @@ export default class infoController {
 
                 console.log('Session UserID after login:', req.session.userId);
                 console.log('Session UserName after login:', req.session.userName);
-                res.json({ userId: result[0].id, userName: result[1].nombre });
+                res.json({ userId: result[0].id, userName: result[0].nombre });
             } else {
                 res.status(401).json({ error: 'Credenciales incorrectas' });
             }

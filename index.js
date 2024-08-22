@@ -84,7 +84,7 @@ cron.schedule('0 0 * * *', () => {
 
 app.use('/api', routes);
 
-app.get('/', (req, res) => res.send('Bienvenidos a mi API :D yuju'));
+app.get('/', (req, res) => res.send('Bienvenidos a mi API :D yuju xd'));
 
 const server = app.listen(process.env.PORT || 8000, () => {
   console.log(`Servidor corriendo en puerto: ${server.address().port}`);

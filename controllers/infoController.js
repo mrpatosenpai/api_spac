@@ -15,23 +15,24 @@ export default class infoController {
             );
     
             if (result.length > 0) {
-                req.session.userId = result[0].id;
-                req.session.userName = result[0].nombre;
-
-                // Lógica para la racha
                 const userId = result[0].id;
+                const userName = result[0].nombre;
+                req.session.userId = userId;
+                req.session.userName = userName;
+    
+                // Lógica para la racha
                 const [rachaResult] = await connection.execute(
                     "SELECT * FROM racha WHERE usuario_id = ?",
                     [userId]
                 );
-
+    
                 const today = new Date();
                 const todayDateString = today.toISOString().split('T')[0];
-
+    
                 if (rachaResult.length > 0) {
                     const ultimaConexion = new Date(rachaResult[0].ultima_conexion);
                     const diasDiferencia = Math.floor((today - ultimaConexion) / (1000 * 60 * 60 * 24));
-
+    
                     if (diasDiferencia === 1) {
                         // Aumentar la racha si es el día siguiente
                         await connection.execute(
@@ -53,9 +54,11 @@ export default class infoController {
                         [userId, todayDateString]
                     );
                 }
-
+    
                 console.log('Session UserID after login:', req.session.userId);
                 console.log('Session UserName after login:', req.session.userName);
+    
+                // Devolver los datos del usuario
                 res.json({ userId, userName });
             } else {
                 res.status(401).json({ error: 'Credenciales incorrectas' });
@@ -68,6 +71,7 @@ export default class infoController {
             }
         }
     }
+    
     static async obtenerRacha(req, res) {
         let connection;
         try {

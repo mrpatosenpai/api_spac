@@ -4,74 +4,75 @@ import db from '../config/database.js';
 
 export default class infoController {
     
-    static async login(req, res) {
-        let connection;
-        try {
-            const { nombre, contrasena } = req.body;
-            connection = await mysql.createConnection(db);
-            const [result] = await connection.execute(
-                "SELECT * FROM usuarios WHERE nombre = ? AND contrasena = ?",
-                [nombre, contrasena]
-            );
-    
-            if (result.length > 0) {
-                const userId = result[0].id;
-                const userName = result[0].nombre;
-                req.session.userId = userId;
-                req.session.userName = userName;
-    
-                // Lógica para la racha
-                const [rachaResult] = await connection.execute(
-                    "SELECT * FROM racha WHERE usuario_id = ?",
-                    [userId]
+        static async login(req, res) {
+            let connection;
+            try {
+                const { nombre, contrasena } = req.body;
+                connection = await mysql.createConnection(db);
+                const [result] = await connection.execute(
+                    "SELECT * FROM usuarios WHERE nombre = ? AND contrasena = ?",
+                    [nombre, contrasena]
                 );
     
-                const today = new Date();
-                const todayDateString = today.toISOString().split('T')[0];
+                if (result.length > 0) {
+                    const userId = result[0].id;
+                    const userName = result[0].nombre;
+                    req.session.userId = userId;
+                    req.session.userName = userName;
     
-                if (rachaResult.length > 0) {
-                    const ultimaConexion = new Date(rachaResult[0].ultima_conexion);
-                    const diasDiferencia = Math.floor((today - ultimaConexion) / (1000 * 60 * 60 * 24));
+                    // Lógica para la racha
+                    const [rachaResult] = await connection.execute(
+                        "SELECT * FROM racha WHERE usuario_id = ?",
+                        [userId]
+                    );
     
-                    if (diasDiferencia === 1) {
-                        // Aumentar la racha si es el día siguiente
+                    const now = new Date();
+                    const nowDateString = now.toISOString().split('T')[0];
+                    const nowTime = now.getTime();
+    
+                    if (rachaResult.length > 0) {
+                        const ultimaConexion = new Date(rachaResult[0].ultima_fecha_login);
+                        const ultimaConexionTime = ultimaConexion.getTime();
+                        const horasDiferencia = Math.floor((nowTime - ultimaConexionTime) / (1000 * 60 * 60));
+    
+                        if (horasDiferencia >= 24 && horasDiferencia < 48) {
+                            // Aumentar la racha si se está dentro de las 24 horas
+                            await connection.execute(
+                                "UPDATE racha SET racha_actual = racha_actual + 1, ultima_fecha_login = NOW() WHERE usuario_id = ?",
+                                [userId]
+                            );
+                        } else if (horasDiferencia >= 48) {
+                            // Resetear la racha si ha pasado más de 48 horas
+                            await connection.execute(
+                                "UPDATE racha SET racha_actual = 1, ultima_fecha_login = NOW() WHERE usuario_id = ?",
+                                [userId]
+                            );
+                        }
+                        // Si la diferencia es menor a 24 horas (mismo día), no hacer nada.
+                    } else {
+                        // Crear un nuevo registro de racha si no existe
                         await connection.execute(
-                            "UPDATE racha SET racha_actual = racha_actual + 1, ultima_fecha_login = ? WHERE usuario_id = ?",
-                            [todayDateString, userId]
-                        );
-                    } else if (diasDiferencia > 1) {
-                        // Resetear la racha si ha pasado más de un día
-                        await connection.execute(
-                            "UPDATE racha SET racha_actual = 1, ultima_fecha_login = ? WHERE usuario_id = ?",
-                            [todayDateString, userId]
+                            "INSERT INTO racha (usuario_id, racha_actual, ultima_fecha_login) VALUES (?, 1, NOW())",
+                            [userId]
                         );
                     }
-                    // Si la diferencia es 0 (mismo día), no hacer nada.
+    
+                    console.log('Session UserID after login:', req.session.userId);
+                    console.log('Session UserName after login:', req.session.userName);
+    
+                    res.json({ userId, userName });
+                    console.log(userId, userName, "son de la sesion")
                 } else {
-                    // Crear un nuevo registro de racha si no existe
-                    await connection.execute(
-                        "INSERT INTO racha (usuario_id, racha_actual, ultima_fecha_login) VALUES (?, 1, ?)",
-                        [userId, todayDateString]
-                    );
+                    res.status(401).json({ error: 'Credenciales incorrectas' });
                 }
-    
-                console.log('Session UserID after login:', req.session.userId);
-                console.log('Session UserName after login:', req.session.userName);
-    
-                res.json({ userId, userName });
-                console.log(userId, userName, "son de la sesion")
-            } else {
-                res.status(401).json({ error: 'Credenciales incorrectas' });
-            }
-        } catch (error) {
-            res.status(500).json({ 'error': error.message });
-        } finally {
-            if (connection) {
-                await connection.end();
+            } catch (error) {
+                res.status(500).json({ 'error': error.message });
+            } finally {
+                if (connection) {
+                    await connection.end();
+                }
             }
         }
-    }
-    
     static async obtenerRacha(req, res) {
         let connection;
         try {

@@ -56,7 +56,7 @@ export default class infoController {
 
                 console.log('Session UserID after login:', req.session.userId);
                 console.log('Session UserName after login:', req.session.userName);
-                res.json({ userId: result[0].id, userName: result[0].nombre });
+                res.json({ userId, userName });
             } else {
                 res.status(401).json({ error: 'Credenciales incorrectas' });
             }

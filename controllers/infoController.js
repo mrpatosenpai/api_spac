@@ -188,7 +188,8 @@ export default class infoController {
         let connection;
         try {
             connection = await mysql.createConnection(db);
-            const [result] = await connection.execute("SELECT * FROM publicaciones");
+            const [result] = await connection.execute(`SELECT *, DATE_FORMAT(fecha, '%Y-%m-%d') AS fecha_formateada, 
+                        DATE_FORMAT(fecha, '%H:%i') AS hora_formateada  FROM publicaciones`);
             console.log(result);
             res.json(result);
         } catch (error) {

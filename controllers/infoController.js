@@ -58,8 +58,8 @@ export default class infoController {
                 console.log('Session UserID after login:', req.session.userId);
                 console.log('Session UserName after login:', req.session.userName);
     
-                // Devolver los datos del usuario
                 res.json({ userId, userName });
+                console.log(userId, userName, "son de la sesion")
             } else {
                 res.status(401).json({ error: 'Credenciales incorrectas' });
             }

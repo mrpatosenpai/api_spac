@@ -14,6 +14,8 @@ routes.get('/usuarios/entradas', infoController.misentradas);
 routes.get('/usuarios/misdatos',infoController.misdatos)
 routes.get('/usuarios/racha', infoController.obtenerRacha);
 routes.post('/logout', infoController.logout);
+routes.get('/usuarios/:id', infoController.obtenerUsuario);
+routes.put('/usuariosedit/:id', infoController.actualizarUsuario);
 
 // Nueva ruta para testSession
 routes.get('/usuarios/test', infoController.testSession);

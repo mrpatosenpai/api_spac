@@ -345,6 +345,64 @@ export default class infoController {
             res.status(500).json({ error: error.message });
         }
     }
+    static async obtenerUsuario(req, res) {
+        let connection;
+        try {
+            const usuarioId = req.params.id;
+
+            connection = await mysql.createConnection(db);
+
+            // Consultar los datos del usuario en la base de datos
+            const [rows] = await connection.execute(
+                'SELECT id, nombre, edad, email FROM usuarios WHERE id = ?',
+                [usuarioId]
+            );
+
+            if (rows.length > 0) {
+                res.json(rows[0]);
+            } else {
+                res.status(404).json({ error: 'Usuario no encontrado' });
+            }
+        } catch (error) {
+            res.status(500).json({ error: error.message });
+        } finally {
+            if (connection) {
+                await connection.end();
+            }
+        }
+    }
+    static async actualizarUsuario(req, res) {
+        let connection;
+        try {
+            const usuarioId = req.params.id;
+            const { nombre, edad, email } = req.body;
+
+            // Validar los datos recibidos
+            if (!nombre || !edad || !email) {
+                return res.status(400).json({ error: 'Todos los campos son requeridos' });
+            }
+
+            connection = await mysql.createConnection(db);
+
+            // Actualizar los datos del usuario en la base de datos
+            const [result] = await connection.execute(
+                'UPDATE usuarios SET nombre = ?, edad = ?, email = ? WHERE id = ?',
+                [nombre, edad, email, usuarioId]
+            );
+
+            if (result.affectedRows > 0) {
+                res.json({ message: 'Usuario actualizado correctamente' });
+            } else {
+                res.status(404).json({ error: 'Usuario no encontrado' });
+            }
+        } catch (error) {
+            res.status(500).json({ error: error.message });
+        } finally {
+            if (connection) {
+                await connection.end();
+            }
+        }
+    }
     
 };
 
